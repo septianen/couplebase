@@ -1,0 +1,35 @@
+CREATE TABLE life_goal (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  target_date TEXT,
+  progress INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'PENDING',
+  is_deleted INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idx_life_goal_couple ON life_goal(couple_id);
+
+getByCoupleId:
+SELECT * FROM life_goal WHERE couple_id = ? AND is_deleted = 0 ORDER BY title;
+
+getById:
+SELECT * FROM life_goal WHERE id = ?;
+
+insert:
+INSERT OR REPLACE INTO life_goal(id, couple_id, title, description, target_date, progress, updated_at, sync_status, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateProgress:
+UPDATE life_goal SET progress = ?, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+updateSyncStatus:
+UPDATE life_goal SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+softDelete:
+UPDATE life_goal SET is_deleted = 1, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM life_goal WHERE sync_status = ?;

@@ -1,0 +1,46 @@
+CREATE TABLE vendor_payment (
+  id TEXT NOT NULL PRIMARY KEY,
+  vendor_id TEXT NOT NULL,
+  couple_id TEXT NOT NULL,
+  description TEXT NOT NULL,
+  amount REAL NOT NULL,
+  due_date TEXT NOT NULL,
+  is_paid INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'PENDING',
+  is_deleted INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idx_vendor_payment_vendor ON vendor_payment(vendor_id);
+CREATE INDEX idx_vendor_payment_couple ON vendor_payment(couple_id);
+
+getByVendorId:
+SELECT * FROM vendor_payment WHERE vendor_id = ? AND is_deleted = 0 ORDER BY due_date;
+
+getByCoupleId:
+SELECT * FROM vendor_payment WHERE couple_id = ? AND is_deleted = 0 ORDER BY due_date;
+
+getById:
+SELECT * FROM vendor_payment WHERE id = ?;
+
+getUpcoming:
+SELECT * FROM vendor_payment WHERE couple_id = ? AND is_paid = 0 AND is_deleted = 0 ORDER BY due_date LIMIT ?;
+
+insert:
+INSERT OR REPLACE INTO vendor_payment(id, vendor_id, couple_id, description, amount, due_date, is_paid, updated_at, sync_status, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+markPaid:
+UPDATE vendor_payment SET is_paid = 1, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+updateSyncStatus:
+UPDATE vendor_payment SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+softDelete:
+UPDATE vendor_payment SET is_deleted = 1, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM vendor_payment WHERE sync_status = ?;
+
+getTotalPaidByVendor:
+SELECT COALESCE(SUM(amount), 0) AS total FROM vendor_payment WHERE vendor_id = ? AND is_paid = 1 AND is_deleted = 0;

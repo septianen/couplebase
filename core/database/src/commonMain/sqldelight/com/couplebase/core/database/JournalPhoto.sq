@@ -1,0 +1,34 @@
+CREATE TABLE journal_photo (
+  id TEXT NOT NULL PRIMARY KEY,
+  entry_id TEXT NOT NULL,
+  couple_id TEXT NOT NULL,
+  photo_url TEXT NOT NULL,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'PENDING',
+  is_deleted INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idx_journal_photo_entry ON journal_photo(entry_id);
+
+getByEntryId:
+SELECT * FROM journal_photo WHERE entry_id = ? AND is_deleted = 0 ORDER BY sort_order;
+
+getById:
+SELECT * FROM journal_photo WHERE id = ?;
+
+insert:
+INSERT OR REPLACE INTO journal_photo(id, entry_id, couple_id, photo_url, sort_order, updated_at, sync_status, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+updateSyncStatus:
+UPDATE journal_photo SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+softDelete:
+UPDATE journal_photo SET is_deleted = 1, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM journal_photo WHERE sync_status = ?;
+
+countByEntryId:
+SELECT COUNT(*) FROM journal_photo WHERE entry_id = ? AND is_deleted = 0;

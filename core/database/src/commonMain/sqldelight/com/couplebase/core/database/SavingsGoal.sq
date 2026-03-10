@@ -1,0 +1,36 @@
+CREATE TABLE savings_goal (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  target_amount REAL NOT NULL,
+  current_amount REAL NOT NULL DEFAULT 0,
+  target_date TEXT,
+  icon TEXT,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'PENDING',
+  is_deleted INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idx_savings_goal_couple ON savings_goal(couple_id);
+
+getByCoupleId:
+SELECT * FROM savings_goal WHERE couple_id = ? AND is_deleted = 0 ORDER BY title;
+
+getById:
+SELECT * FROM savings_goal WHERE id = ?;
+
+insert:
+INSERT OR REPLACE INTO savings_goal(id, couple_id, title, target_amount, current_amount, target_date, icon, updated_at, sync_status, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateCurrentAmount:
+UPDATE savings_goal SET current_amount = ?, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+updateSyncStatus:
+UPDATE savings_goal SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+softDelete:
+UPDATE savings_goal SET is_deleted = 1, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM savings_goal WHERE sync_status = ?;

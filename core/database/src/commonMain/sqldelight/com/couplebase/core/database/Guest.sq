@@ -1,0 +1,48 @@
+CREATE TABLE guest (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  email TEXT,
+  phone TEXT,
+  rsvp_status TEXT NOT NULL DEFAULT 'PENDING',
+  meal_preference TEXT,
+  table_number INTEGER,
+  has_plus_one INTEGER NOT NULL DEFAULT 0,
+  notes TEXT,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'PENDING',
+  is_deleted INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idx_guest_couple ON guest(couple_id);
+
+getByCoupleId:
+SELECT * FROM guest WHERE couple_id = ? AND is_deleted = 0 ORDER BY name;
+
+getById:
+SELECT * FROM guest WHERE id = ?;
+
+getByRsvpStatus:
+SELECT * FROM guest WHERE couple_id = ? AND rsvp_status = ? AND is_deleted = 0 ORDER BY name;
+
+searchByName:
+SELECT * FROM guest WHERE couple_id = ? AND is_deleted = 0 AND name LIKE '%' || ? || '%' ORDER BY name;
+
+insert:
+INSERT OR REPLACE INTO guest(id, couple_id, name, email, phone, rsvp_status, meal_preference, table_number, has_plus_one, notes, updated_at, sync_status, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateSyncStatus:
+UPDATE guest SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+softDelete:
+UPDATE guest SET is_deleted = 1, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM guest WHERE sync_status = ?;
+
+countByCoupleId:
+SELECT COUNT(*) FROM guest WHERE couple_id = ? AND is_deleted = 0;
+
+countByRsvpStatus:
+SELECT COUNT(*) FROM guest WHERE couple_id = ? AND rsvp_status = ? AND is_deleted = 0;
