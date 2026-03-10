@@ -1,0 +1,34 @@
+CREATE TABLE shared_note (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL DEFAULT '',
+  is_pinned INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'PENDING',
+  is_deleted INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idx_shared_note_couple ON shared_note(couple_id);
+
+getByCoupleId:
+SELECT * FROM shared_note WHERE couple_id = ? AND is_deleted = 0 ORDER BY is_pinned DESC, updated_at DESC;
+
+getById:
+SELECT * FROM shared_note WHERE id = ?;
+
+insert:
+INSERT OR REPLACE INTO shared_note(id, couple_id, title, body, is_pinned, updated_at, sync_status, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+togglePinned:
+UPDATE shared_note SET is_pinned = ?, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+updateSyncStatus:
+UPDATE shared_note SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+softDelete:
+UPDATE shared_note SET is_deleted = 1, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM shared_note WHERE sync_status = ?;

@@ -1,0 +1,35 @@
+CREATE TABLE couple (
+  id TEXT NOT NULL PRIMARY KEY,
+  invite_code TEXT UNIQUE NOT NULL,
+  partner1_id TEXT NOT NULL,
+  partner2_id TEXT,
+  couple_name TEXT,
+  wedding_date TEXT,
+  photo_url TEXT,
+  together_since TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'SYNCED'
+);
+
+getById:
+SELECT * FROM couple WHERE id = ?;
+
+getAll:
+SELECT * FROM couple;
+
+insert:
+INSERT OR REPLACE INTO couple(id, invite_code, partner1_id, partner2_id, couple_name, wedding_date, photo_url, together_since, created_at, updated_at, sync_status)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateSyncStatus:
+UPDATE couple SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+getByInviteCode:
+SELECT * FROM couple WHERE invite_code = ?;
+
+getBySyncStatus:
+SELECT * FROM couple WHERE sync_status = ?;
+
+delete:
+DELETE FROM couple WHERE id = ?;

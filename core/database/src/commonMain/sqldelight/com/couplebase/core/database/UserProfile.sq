@@ -1,0 +1,29 @@
+CREATE TABLE user_profile (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT,
+  full_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  avatar_url TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'SYNCED'
+);
+
+getById:
+SELECT * FROM user_profile WHERE id = ?;
+
+getByCoupleId:
+SELECT * FROM user_profile WHERE couple_id = ?;
+
+insert:
+INSERT OR REPLACE INTO user_profile(id, couple_id, full_name, email, avatar_url, created_at, updated_at, sync_status)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+updateSyncStatus:
+UPDATE user_profile SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM user_profile WHERE sync_status = ?;
+
+delete:
+DELETE FROM user_profile WHERE id = ?;
