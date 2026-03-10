@@ -14,3 +14,20 @@ dependencies {
 fun Provider<PluginDependency>.toDep() = map {
     "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}"
 }
+
+gradlePlugin {
+    plugins {
+        register("kmpLibrary") {
+            id = "couplebase.kmp.library"
+            implementationClass = "KmpLibraryConventionPlugin"
+        }
+        register("kmpCompose") {
+            id = "couplebase.kmp.compose"
+            implementationClass = "KmpComposeConventionPlugin"
+        }
+        register("kmpFeature") {
+            id = "couplebase.kmp.feature"
+            implementationClass = "KmpFeatureConventionPlugin"
+        }
+    }
+}
