@@ -36,7 +36,7 @@ fun Project.configureKmpDefaults() {
 fun Project.configureAndroidLibrary() {
     extensions.configure<com.android.build.gradle.LibraryExtension> {
         val catalog = project.versionCatalog()
-        namespace = "com.couplebase.${project.path.replace(":", ".").drop(1)}"
+        namespace = "com.couplebase.${project.path.replace(":", ".").replace("-", ".").drop(1)}"
         compileSdk = catalog.findVersion("android-compileSdk").get().requiredVersion.toInt()
 
         defaultConfig {
