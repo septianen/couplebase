@@ -44,7 +44,9 @@ class RootComponent(
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
-    private val handler = instanceKeeper.getOrCreate { SessionHandler(authRepository) }
+    private val handler = instanceKeeper.getOrCreate {
+        SessionHandler(authRepository, preferencesDataStore)
+    }
 
     val childStack: Value<ChildStack<Config, Child>> = childStack(
         source = navigation,
@@ -55,9 +57,13 @@ class RootComponent(
     )
 
     init {
-        handler.checkSession { isLoggedIn ->
+        handler.checkSession { isLoggedIn, onboardingCompleted ->
             if (isLoggedIn) {
-                navigation.replaceAll(Config.Main)
+                if (onboardingCompleted) {
+                    navigation.replaceAll(Config.Main)
+                } else {
+                    navigation.replaceAll(Config.Onboarding)
+                }
             } else {
                 navigation.replaceAll(Config.Auth)
             }
@@ -70,6 +76,7 @@ class RootComponent(
             Config.Auth -> Child.Auth(
                 AuthComponent(componentContext, authRepository, coupleRepository, ::onAuthComplete)
             )
+            Config.Onboarding -> Child.Onboarding
             Config.Main -> Child.Main(
                 MainComponent(
                     componentContext = componentContext,
@@ -92,7 +99,19 @@ class RootComponent(
     }
 
     private fun onAuthComplete() {
-        navigation.replaceAll(Config.Main)
+        handler.checkOnboarding { completed ->
+            if (completed) {
+                navigation.replaceAll(Config.Main)
+            } else {
+                navigation.replaceAll(Config.Onboarding)
+            }
+        }
+    }
+
+    fun onOnboardingComplete() {
+        handler.completeOnboarding {
+            navigation.replaceAll(Config.Main)
+        }
     }
 
     private fun onLogout() {
@@ -110,26 +129,46 @@ class RootComponent(
         data object Auth : Config
 
         @Serializable
+        data object Onboarding : Config
+
+        @Serializable
         data object Main : Config
     }
 
     sealed interface Child {
         data object Splash : Child
         data class Auth(val component: AuthComponent) : Child
+        data object Onboarding : Child
         data class Main(val component: MainComponent) : Child
     }
 }
 
 private class SessionHandler(
     private val authRepository: AuthRepository,
+    private val preferencesDataStore: PreferencesDataStore,
 ) : InstanceKeeper.Instance {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    fun checkSession(onResult: (Boolean) -> Unit) {
+    fun checkSession(onResult: (isLoggedIn: Boolean, onboardingCompleted: Boolean) -> Unit) {
         scope.launch {
             val loggedIn = authRepository.isLoggedIn()
-            onResult(loggedIn)
+            val prefs = preferencesDataStore.getPreferences()
+            onResult(loggedIn, prefs.onboardingCompleted)
+        }
+    }
+
+    fun checkOnboarding(onResult: (Boolean) -> Unit) {
+        scope.launch {
+            val prefs = preferencesDataStore.getPreferences()
+            onResult(prefs.onboardingCompleted)
+        }
+    }
+
+    fun completeOnboarding(onComplete: () -> Unit) {
+        scope.launch {
+            preferencesDataStore.updatePreferences { it.copy(onboardingCompleted = true) }
+            onComplete()
         }
     }
 
