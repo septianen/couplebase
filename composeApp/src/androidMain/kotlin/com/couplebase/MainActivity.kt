@@ -8,6 +8,7 @@ import com.arkivanov.decompose.defaultComponentContext
 import com.couplebase.core.datastore.PlatformStorage
 import com.couplebase.core.datastore.PreferencesDataStoreImpl
 import com.couplebase.di.StubAuthRepository
+import com.couplebase.di.StubChecklistRepository
 import com.couplebase.di.StubCoupleRepository
 import com.couplebase.navigation.RootComponent
 import com.couplebase.navigation.RootContent
@@ -19,10 +20,13 @@ class MainActivity : ComponentActivity() {
 
         val preferencesDataStore = PreferencesDataStoreImpl(PlatformStorage(this))
 
+        val checklistRepository = StubChecklistRepository()
+
         val rootComponent = RootComponent(
             componentContext = defaultComponentContext(),
             authRepository = StubAuthRepository(preferencesDataStore),
             coupleRepository = StubCoupleRepository(),
+            checklistRepository = checklistRepository,
         )
 
         setContent {
