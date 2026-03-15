@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 
 class MainComponent(
     componentContext: ComponentContext,
+    val onLogout: () -> Unit,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Tab>()

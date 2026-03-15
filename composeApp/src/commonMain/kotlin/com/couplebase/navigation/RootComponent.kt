@@ -6,8 +6,15 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.instancekeeper.InstanceKeeper
+import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.couplebase.core.domain.repository.AuthRepository
 import com.couplebase.core.domain.repository.CoupleRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 class RootComponent(
@@ -17,21 +24,38 @@ class RootComponent(
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
+    private val handler = instanceKeeper.getOrCreate { SessionHandler(authRepository) }
 
     val childStack: Value<ChildStack<Config, Child>> = childStack(
         source = navigation,
         serializer = Config.serializer(),
-        initialConfiguration = Config.Auth,
+        initialConfiguration = Config.Splash,
         handleBackButton = true,
         childFactory = ::createChild,
     )
 
+    init {
+        handler.checkSession { isLoggedIn ->
+            if (isLoggedIn) {
+                navigation.replaceAll(Config.Main)
+            } else {
+                navigation.replaceAll(Config.Auth)
+            }
+        }
+    }
+
     private fun createChild(config: Config, componentContext: ComponentContext): Child {
         return when (config) {
+            Config.Splash -> Child.Splash
             Config.Auth -> Child.Auth(
                 AuthComponent(componentContext, authRepository, coupleRepository, ::onAuthComplete)
             )
-            Config.Main -> Child.Main(MainComponent(componentContext))
+            Config.Main -> Child.Main(
+                MainComponent(
+                    componentContext = componentContext,
+                    onLogout = ::onLogout,
+                )
+            )
         }
     }
 
@@ -39,8 +63,17 @@ class RootComponent(
         navigation.replaceAll(Config.Main)
     }
 
+    private fun onLogout() {
+        handler.logout {
+            navigation.replaceAll(Config.Auth)
+        }
+    }
+
     @Serializable
     sealed interface Config {
+        @Serializable
+        data object Splash : Config
+
         @Serializable
         data object Auth : Config
 
@@ -49,7 +82,33 @@ class RootComponent(
     }
 
     sealed interface Child {
+        data object Splash : Child
         data class Auth(val component: AuthComponent) : Child
         data class Main(val component: MainComponent) : Child
+    }
+}
+
+private class SessionHandler(
+    private val authRepository: AuthRepository,
+) : InstanceKeeper.Instance {
+
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    fun checkSession(onResult: (Boolean) -> Unit) {
+        scope.launch {
+            val loggedIn = authRepository.isLoggedIn()
+            onResult(loggedIn)
+        }
+    }
+
+    fun logout(onComplete: () -> Unit) {
+        scope.launch {
+            authRepository.signOut()
+            onComplete()
+        }
+    }
+
+    override fun onDestroy() {
+        scope.cancel()
     }
 }

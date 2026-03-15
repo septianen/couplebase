@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.arkivanov.decompose.defaultComponentContext
+import com.couplebase.core.datastore.PlatformStorage
+import com.couplebase.core.datastore.PreferencesDataStoreImpl
 import com.couplebase.di.StubAuthRepository
 import com.couplebase.di.StubCoupleRepository
 import com.couplebase.navigation.RootComponent
@@ -15,9 +17,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val preferencesDataStore = PreferencesDataStoreImpl(PlatformStorage(this))
+
         val rootComponent = RootComponent(
             componentContext = defaultComponentContext(),
-            authRepository = StubAuthRepository(),
+            authRepository = StubAuthRepository(preferencesDataStore),
             coupleRepository = StubCoupleRepository(),
         )
 
