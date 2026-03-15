@@ -20,6 +20,9 @@ fun RootContent(component: RootComponent) {
             when (val instance = child.instance) {
                 is RootComponent.Child.Splash -> SplashScreen()
                 is RootComponent.Child.Auth -> AuthScreen(instance.component)
+                is RootComponent.Child.Onboarding -> OnboardingScreen(
+                    onComplete = { component.onOnboardingComplete() }
+                )
                 is RootComponent.Child.Main -> MainScreen(instance.component)
             }
         }
