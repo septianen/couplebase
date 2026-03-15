@@ -12,6 +12,7 @@ CREATE TABLE savings_goal (
 );
 
 CREATE INDEX idx_savings_goal_couple ON savings_goal(couple_id);
+CREATE INDEX idx_savings_goal_sync ON savings_goal(sync_status);
 
 getByCoupleId:
 SELECT * FROM savings_goal WHERE couple_id = ? AND is_deleted = 0 ORDER BY title;

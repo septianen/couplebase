@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import com.couplebase.core.model.DailyCheckin
 import com.couplebase.core.model.Mood
 import com.couplebase.core.ui.component.CbButton
+import com.couplebase.core.ui.component.CbErrorBar
 import com.couplebase.core.ui.component.CbTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +66,15 @@ fun CheckinScreen(component: CheckinComponent) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
+        ) {
+            CbErrorBar(
+                message = state.error,
+                onDismiss = { component.onDismissError() },
+            )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -133,6 +142,7 @@ fun CheckinScreen(component: CheckinComponent) {
             // Weekly mood grid
             if (state.weeklyMoods.isNotEmpty()) {
                 WeeklyMoodGrid(state.weeklyMoods)
+            }
             }
         }
     }

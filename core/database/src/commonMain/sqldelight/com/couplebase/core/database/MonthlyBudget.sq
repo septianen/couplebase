@@ -11,6 +11,7 @@ CREATE TABLE monthly_budget (
 );
 
 CREATE INDEX idx_monthly_budget_couple ON monthly_budget(couple_id);
+CREATE INDEX idx_monthly_budget_sync ON monthly_budget(sync_status);
 
 getByCoupleIdAndMonth:
 SELECT * FROM monthly_budget WHERE couple_id = ? AND year_month = ? AND is_deleted = 0 ORDER BY category;

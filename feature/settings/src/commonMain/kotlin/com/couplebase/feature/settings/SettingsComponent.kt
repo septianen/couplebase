@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.couplebase.core.common.Result
+import com.couplebase.core.common.toUserMessage
 import com.couplebase.core.datastore.PreferencesDataStore
 import com.couplebase.core.datastore.UserPreferences
 import com.couplebase.core.domain.repository.AuthRepository
@@ -84,6 +85,10 @@ class SettingsComponent(
     fun onLogoutClicked() {
         handler.logout { onLogout() }
     }
+
+    fun onDismissError() {
+        handler.updateState { it.copy(error = null) }
+    }
 }
 
 data class SettingsUiState(
@@ -95,6 +100,7 @@ data class SettingsUiState(
     val showWeddingDateEditor: Boolean = false,
     val showLeaveConfirm: Boolean = false,
     val inviteCodeCopied: Boolean = false,
+    val error: String? = null,
 )
 
 private class SettingsHandler(
@@ -119,15 +125,16 @@ private class SettingsHandler(
 
     private fun loadData() {
         scope.launch {
+            var error: String? = null
             val user = when (val r = authRepository.getCurrentUser()) {
                 is Result.Success -> r.data
-                is Result.Error -> null
+                is Result.Error -> { error = r.toUserMessage(); null }
             }
             val couple = when (val r = coupleRepository.getCouple(coupleId)) {
                 is Result.Success -> r.data
-                is Result.Error -> null
+                is Result.Error -> { error = r.toUserMessage(); null }
             }
-            _state.update { it.copy(user = user, couple = couple, isLoading = false) }
+            _state.update { it.copy(user = user, couple = couple, isLoading = false, error = error) }
         }
     }
 
@@ -160,7 +167,7 @@ private class SettingsHandler(
         scope.launch {
             when (val r = coupleRepository.updateCouple(updated)) {
                 is Result.Success -> _state.update { it.copy(couple = r.data, showWeddingDateEditor = false) }
-                is Result.Error -> {}
+                is Result.Error -> _state.update { it.copy(error = r.toUserMessage(), showWeddingDateEditor = false) }
             }
         }
     }

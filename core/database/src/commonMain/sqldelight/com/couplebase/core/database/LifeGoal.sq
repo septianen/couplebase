@@ -11,6 +11,7 @@ CREATE TABLE life_goal (
 );
 
 CREATE INDEX idx_life_goal_couple ON life_goal(couple_id);
+CREATE INDEX idx_life_goal_sync ON life_goal(sync_status);
 
 getByCoupleId:
 SELECT * FROM life_goal WHERE couple_id = ? AND is_deleted = 0 ORDER BY title;

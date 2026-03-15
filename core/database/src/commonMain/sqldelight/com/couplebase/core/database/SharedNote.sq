@@ -10,6 +10,7 @@ CREATE TABLE shared_note (
 );
 
 CREATE INDEX idx_shared_note_couple ON shared_note(couple_id);
+CREATE INDEX idx_shared_note_sync ON shared_note(sync_status);
 
 getByCoupleId:
 SELECT * FROM shared_note WHERE couple_id = ? AND is_deleted = 0 ORDER BY is_pinned DESC, updated_at DESC;

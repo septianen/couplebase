@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.couplebase.core.model.ThemeMode
 import com.couplebase.core.ui.component.CbButton
 import com.couplebase.core.ui.component.CbButtonStyle
+import com.couplebase.core.ui.component.CbErrorBar
 import com.couplebase.core.ui.component.CbTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,11 +67,19 @@ fun SettingsScreen(component: SettingsComponent) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+                .padding(innerPadding),
         ) {
+            CbErrorBar(
+                message = state.error,
+                onDismiss = { component.onDismissError() },
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
             // Account section
             SectionHeader("Account")
             SettingsCard {
@@ -193,6 +202,7 @@ fun SettingsScreen(component: SettingsComponent) {
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 
@@ -396,6 +406,8 @@ private fun WeddingDateSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var date by remember { mutableStateOf(currentDate) }
+    var dateError by remember { mutableStateOf<String?>(null) }
+    val datePattern = Regex("^\\d{4}-\\d{2}-\\d{2}$")
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -415,15 +427,20 @@ private fun WeddingDateSheet(
 
             CbTextField(
                 value = date,
-                onValueChange = { date = it },
+                onValueChange = { date = it; dateError = null },
                 label = "Date (YYYY-MM-DD)",
+                error = dateError,
                 modifier = Modifier.fillMaxWidth(),
             )
 
             CbButton(
                 text = "Save",
                 onClick = {
-                    if (date.isNotBlank()) onSave(date)
+                    when {
+                        date.isBlank() -> dateError = "Date is required"
+                        !datePattern.matches(date) -> dateError = "Use format YYYY-MM-DD"
+                        else -> onSave(date)
+                    }
                 },
                 modifier = Modifier.fillMaxWidth(),
             )

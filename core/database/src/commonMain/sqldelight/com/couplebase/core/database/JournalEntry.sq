@@ -11,6 +11,7 @@ CREATE TABLE journal_entry (
 );
 
 CREATE INDEX idx_journal_entry_couple ON journal_entry(couple_id);
+CREATE INDEX idx_journal_entry_sync ON journal_entry(sync_status);
 
 getByCoupleId:
 SELECT * FROM journal_entry WHERE couple_id = ? AND is_deleted = 0 ORDER BY date DESC;
