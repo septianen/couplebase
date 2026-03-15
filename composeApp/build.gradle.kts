@@ -69,6 +69,7 @@ kotlin {
             implementation(projects.feature.weddingTimeline)
             implementation(projects.feature.coupleProfile)
             implementation(projects.feature.coupleGoals)
+            implementation(projects.feature.financeBudget)
         }
 
         androidMain.dependencies {

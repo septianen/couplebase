@@ -8,11 +8,13 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
+import com.couplebase.core.domain.repository.FinanceRepository
 import com.couplebase.core.domain.repository.GuestRepository
 import com.couplebase.core.domain.repository.LifeGoalRepository
 import com.couplebase.core.domain.repository.MilestoneRepository
 import com.couplebase.core.domain.repository.TimelineRepository
 import com.couplebase.core.domain.repository.VendorRepository
+import com.couplebase.finance.FinanceTabComponent
 import com.couplebase.home.HomeTabComponent
 import com.couplebase.me.MeTabComponent
 import com.couplebase.wedding.WeddingTabComponent
@@ -27,6 +29,7 @@ class MainComponent(
     private val timelineRepository: TimelineRepository,
     private val milestoneRepository: MilestoneRepository,
     private val lifeGoalRepository: LifeGoalRepository,
+    private val financeRepository: FinanceRepository,
     private val coupleId: String = "stub-couple-id",
     val onLogout: () -> Unit,
 ) : ComponentContext by componentContext {
@@ -55,7 +58,14 @@ class MainComponent(
                     timelineRepository = timelineRepository,
                 )
             )
-            Tab.Finance -> TabChild.Finance(componentContext)
+            Tab.Finance -> TabChild.Finance(
+                FinanceTabComponent(
+                    componentContext = componentContext,
+                    coupleId = coupleId,
+                    financeRepository = financeRepository,
+                    budgetRepository = budgetRepository,
+                )
+            )
             Tab.Us -> TabChild.Us(componentContext)
             Tab.Me -> TabChild.Me(
                 MeTabComponent(
@@ -93,7 +103,7 @@ class MainComponent(
     sealed interface TabChild {
         data class Home(val component: HomeTabComponent) : TabChild
         data class Wedding(val component: WeddingTabComponent) : TabChild
-        data class Finance(val componentContext: ComponentContext) : TabChild
+        data class Finance(val component: FinanceTabComponent) : TabChild
         data class Us(val componentContext: ComponentContext) : TabChild
         data class Me(val component: MeTabComponent) : TabChild
     }
