@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
+import com.couplebase.core.domain.repository.GuestRepository
 import com.couplebase.home.HomeTabComponent
 import com.couplebase.wedding.WeddingTabComponent
 import kotlinx.serialization.Serializable
@@ -16,6 +17,7 @@ class MainComponent(
     componentContext: ComponentContext,
     private val checklistRepository: ChecklistRepository,
     private val budgetRepository: BudgetRepository,
+    private val guestRepository: GuestRepository,
     private val coupleId: String = "stub-couple-id",
     val onLogout: () -> Unit,
 ) : ComponentContext by componentContext {
@@ -39,6 +41,7 @@ class MainComponent(
                     coupleId = coupleId,
                     checklistRepository = checklistRepository,
                     budgetRepository = budgetRepository,
+                    guestRepository = guestRepository,
                 )
             )
             Tab.Finance -> TabChild.Finance(componentContext)

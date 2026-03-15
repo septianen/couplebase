@@ -11,8 +11,10 @@ import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
+import com.couplebase.core.domain.repository.GuestRepository
 import com.couplebase.feature.wedding.budget.BudgetComponent
 import com.couplebase.feature.wedding.checklist.ChecklistComponent
+import com.couplebase.feature.wedding.guests.GuestListComponent
 import com.couplebase.feature.wedding.checklist.usecase.LoadChecklistTemplateUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +28,7 @@ class WeddingTabComponent(
     private val coupleId: String,
     private val checklistRepository: ChecklistRepository,
     private val budgetRepository: BudgetRepository,
+    private val guestRepository: GuestRepository,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -63,6 +66,14 @@ class WeddingTabComponent(
                     onBack = { navigation.pop() },
                 )
             )
+            Config.Guests -> Child.Guests(
+                GuestListComponent(
+                    componentContext = componentContext,
+                    coupleId = coupleId,
+                    repository = guestRepository,
+                    onBack = { navigation.pop() },
+                )
+            )
         }
     }
 
@@ -72,6 +83,10 @@ class WeddingTabComponent(
 
     fun onNavigateToBudget() {
         navigation.push(Config.Budget)
+    }
+
+    fun onNavigateToGuests() {
+        navigation.push(Config.Guests)
     }
 
     @Serializable
@@ -84,12 +99,16 @@ class WeddingTabComponent(
 
         @Serializable
         data object Budget : Config
+
+        @Serializable
+        data object Guests : Config
     }
 
     sealed interface Child {
         data object Hub : Child
         data class Checklist(val component: ChecklistComponent) : Child
         data class Budget(val component: BudgetComponent) : Child
+        data class Guests(val component: GuestListComponent) : Child
     }
 }
 

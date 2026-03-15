@@ -64,6 +64,7 @@ kotlin {
             implementation(projects.feature.auth)
             implementation(projects.feature.weddingChecklist)
             implementation(projects.feature.weddingBudget)
+            implementation(projects.feature.weddingGuests)
         }
 
         androidMain.dependencies {
