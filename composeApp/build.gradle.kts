@@ -56,7 +56,11 @@ kotlin {
             implementation(libs.essenty.instancekeeper)
             implementation(libs.essenty.backhandler)
 
+            implementation(projects.core.common)
+            implementation(projects.core.model)
+            implementation(projects.core.domain)
             implementation(projects.core.ui)
+            implementation(projects.feature.auth)
         }
 
         androidMain.dependencies {
