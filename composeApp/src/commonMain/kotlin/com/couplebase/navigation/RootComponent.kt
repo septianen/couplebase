@@ -6,10 +6,12 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
+import com.couplebase.core.domain.repository.AuthRepository
 import kotlinx.serialization.Serializable
 
 class RootComponent(
     componentContext: ComponentContext,
+    private val authRepository: AuthRepository,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -24,7 +26,7 @@ class RootComponent(
 
     private fun createChild(config: Config, componentContext: ComponentContext): Child {
         return when (config) {
-            Config.Auth -> Child.Auth(AuthComponent(componentContext, ::onAuthComplete))
+            Config.Auth -> Child.Auth(AuthComponent(componentContext, authRepository, ::onAuthComplete))
             Config.Main -> Child.Main(MainComponent(componentContext))
         }
     }

@@ -18,7 +18,7 @@ fun RootContent(component: RootComponent) {
             animation = stackAnimation(fade()),
         ) { child ->
             when (val instance = child.instance) {
-                is RootComponent.Child.Auth -> AuthPlaceholderScreen(instance.component)
+                is RootComponent.Child.Auth -> AuthScreen(instance.component)
                 is RootComponent.Child.Main -> MainScreen(instance.component)
             }
         }
