@@ -9,6 +9,7 @@ import com.arkivanov.decompose.value.Value
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
 import com.couplebase.core.domain.repository.GuestRepository
+import com.couplebase.core.domain.repository.TimelineRepository
 import com.couplebase.core.domain.repository.VendorRepository
 import com.couplebase.home.HomeTabComponent
 import com.couplebase.wedding.WeddingTabComponent
@@ -20,6 +21,7 @@ class MainComponent(
     private val budgetRepository: BudgetRepository,
     private val guestRepository: GuestRepository,
     private val vendorRepository: VendorRepository,
+    private val timelineRepository: TimelineRepository,
     private val coupleId: String = "stub-couple-id",
     val onLogout: () -> Unit,
 ) : ComponentContext by componentContext {
@@ -45,6 +47,7 @@ class MainComponent(
                     budgetRepository = budgetRepository,
                     guestRepository = guestRepository,
                     vendorRepository = vendorRepository,
+                    timelineRepository = timelineRepository,
                 )
             )
             Tab.Finance -> TabChild.Finance(componentContext)

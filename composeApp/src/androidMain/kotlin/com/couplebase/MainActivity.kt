@@ -12,6 +12,7 @@ import com.couplebase.di.StubBudgetRepository
 import com.couplebase.di.StubChecklistRepository
 import com.couplebase.di.StubCoupleRepository
 import com.couplebase.di.StubGuestRepository
+import com.couplebase.di.StubTimelineRepository
 import com.couplebase.di.StubVendorRepository
 import com.couplebase.navigation.RootComponent
 import com.couplebase.navigation.RootContent
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
             budgetRepository = StubBudgetRepository(),
             guestRepository = StubGuestRepository(),
             vendorRepository = StubVendorRepository(),
+            timelineRepository = StubTimelineRepository(),
         )
 
         setContent {

@@ -12,10 +12,12 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
 import com.couplebase.core.domain.repository.GuestRepository
+import com.couplebase.core.domain.repository.TimelineRepository
 import com.couplebase.core.domain.repository.VendorRepository
 import com.couplebase.feature.wedding.budget.BudgetComponent
 import com.couplebase.feature.wedding.checklist.ChecklistComponent
 import com.couplebase.feature.wedding.guests.GuestListComponent
+import com.couplebase.feature.wedding.timeline.TimelineComponent
 import com.couplebase.feature.wedding.vendors.VendorListComponent
 import com.couplebase.feature.wedding.checklist.usecase.LoadChecklistTemplateUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +34,7 @@ class WeddingTabComponent(
     private val budgetRepository: BudgetRepository,
     private val guestRepository: GuestRepository,
     private val vendorRepository: VendorRepository,
+    private val timelineRepository: TimelineRepository,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -85,6 +88,14 @@ class WeddingTabComponent(
                     onBack = { navigation.pop() },
                 )
             )
+            Config.Timeline -> Child.Timeline(
+                TimelineComponent(
+                    componentContext = componentContext,
+                    coupleId = coupleId,
+                    repository = timelineRepository,
+                    onBack = { navigation.pop() },
+                )
+            )
         }
     }
 
@@ -104,6 +115,10 @@ class WeddingTabComponent(
         navigation.push(Config.Vendors)
     }
 
+    fun onNavigateToTimeline() {
+        navigation.push(Config.Timeline)
+    }
+
     @Serializable
     sealed interface Config {
         @Serializable
@@ -120,6 +135,9 @@ class WeddingTabComponent(
 
         @Serializable
         data object Vendors : Config
+
+        @Serializable
+        data object Timeline : Config
     }
 
     sealed interface Child {
@@ -128,6 +146,7 @@ class WeddingTabComponent(
         data class Budget(val component: BudgetComponent) : Child
         data class Guests(val component: GuestListComponent) : Child
         data class Vendors(val component: VendorListComponent) : Child
+        data class Timeline(val component: TimelineComponent) : Child
     }
 }
 
