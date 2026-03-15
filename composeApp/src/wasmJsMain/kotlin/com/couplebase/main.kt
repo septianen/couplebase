@@ -35,6 +35,7 @@ fun main() {
         milestoneRepository = StubMilestoneRepository(),
         lifeGoalRepository = StubLifeGoalRepository(),
         financeRepository = StubFinanceRepository(),
+        preferencesDataStore = preferencesDataStore,
     )
 
     CanvasBasedWindow(canvasElementId = "ComposeTarget", title = "Couplebase") {
