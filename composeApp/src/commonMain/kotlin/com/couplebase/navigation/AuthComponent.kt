@@ -8,13 +8,16 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.couplebase.core.domain.repository.AuthRepository
+import com.couplebase.core.domain.repository.CoupleRepository
 import com.couplebase.feature.auth.login.LoginComponent
+import com.couplebase.feature.auth.pairing.PairingComponent
 import com.couplebase.feature.auth.signup.SignupComponent
 import kotlinx.serialization.Serializable
 
 class AuthComponent(
     componentContext: ComponentContext,
     private val authRepository: AuthRepository,
+    private val coupleRepository: CoupleRepository,
     private val onAuthComplete: () -> Unit,
 ) : ComponentContext by componentContext {
 
@@ -34,7 +37,7 @@ class AuthComponent(
                 LoginComponent(
                     componentContext = componentContext,
                     authRepository = authRepository,
-                    onLoginSuccess = onAuthComplete,
+                    onLoginSuccess = { navigation.push(Config.Pairing) },
                     onNavigateToSignup = { navigation.push(Config.Signup) },
                 )
             )
@@ -42,8 +45,15 @@ class AuthComponent(
                 SignupComponent(
                     componentContext = componentContext,
                     authRepository = authRepository,
-                    onSignupSuccess = onAuthComplete,
+                    onSignupSuccess = { navigation.push(Config.Pairing) },
                     onNavigateBack = { navigation.pop() },
+                )
+            )
+            Config.Pairing -> Child.Pairing(
+                PairingComponent(
+                    componentContext = componentContext,
+                    coupleRepository = coupleRepository,
+                    onPairingComplete = onAuthComplete,
                 )
             )
         }
@@ -56,10 +66,14 @@ class AuthComponent(
 
         @Serializable
         data object Signup : Config
+
+        @Serializable
+        data object Pairing : Config
     }
 
     sealed interface Child {
         data class Login(val component: LoginComponent) : Child
         data class Signup(val component: SignupComponent) : Child
+        data class Pairing(val component: PairingComponent) : Child
     }
 }

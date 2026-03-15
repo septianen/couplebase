@@ -1,4 +1,4 @@
-package com.couplebase.navigation
+package com.couplebase.feature.auth.pairing
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -8,12 +8,9 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.couplebase.feature.auth.login.LoginScreen
-import com.couplebase.feature.auth.pairing.PairingScreen
-import com.couplebase.feature.auth.signup.SignupScreen
 
 @Composable
-fun AuthScreen(component: AuthComponent) {
+fun PairingScreen(component: PairingComponent) {
     val childStack by component.childStack.subscribeAsState()
 
     Children(
@@ -21,9 +18,10 @@ fun AuthScreen(component: AuthComponent) {
         animation = stackAnimation(slide() + fade()),
     ) { child ->
         when (val instance = child.instance) {
-            is AuthComponent.Child.Login -> LoginScreen(instance.component)
-            is AuthComponent.Child.Signup -> SignupScreen(instance.component)
-            is AuthComponent.Child.Pairing -> PairingScreen(instance.component)
+            is PairingComponent.Child.Choose -> ChooseScreen(instance.component)
+            is PairingComponent.Child.Create -> CreateCoupleScreen(instance.component)
+            is PairingComponent.Child.Invite -> InviteScreen(instance.component)
+            is PairingComponent.Child.Join -> JoinCoupleScreen(instance.component)
         }
     }
 }
