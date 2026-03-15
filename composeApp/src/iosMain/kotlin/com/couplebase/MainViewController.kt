@@ -9,6 +9,7 @@ import com.couplebase.di.StubAuthRepository
 import com.couplebase.di.StubBudgetRepository
 import com.couplebase.di.StubChecklistRepository
 import com.couplebase.di.StubCoupleRepository
+import com.couplebase.di.StubGuestRepository
 import com.couplebase.navigation.RootComponent
 import com.couplebase.navigation.RootContent
 
@@ -21,6 +22,7 @@ fun MainViewController() = ComposeUIViewController {
         coupleRepository = StubCoupleRepository(),
         checklistRepository = StubChecklistRepository(),
         budgetRepository = StubBudgetRepository(),
+        guestRepository = StubGuestRepository(),
     )
     RootContent(rootComponent)
 }

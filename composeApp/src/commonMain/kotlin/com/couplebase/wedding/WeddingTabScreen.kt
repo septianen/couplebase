@@ -10,6 +10,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.couplebase.feature.wedding.budget.BudgetScreen
 import com.couplebase.feature.wedding.checklist.ChecklistScreen
+import com.couplebase.feature.wedding.guests.GuestListScreen
 
 @Composable
 fun WeddingTabScreen(component: WeddingTabComponent) {
@@ -23,6 +24,7 @@ fun WeddingTabScreen(component: WeddingTabComponent) {
             is WeddingTabComponent.Child.Hub -> WeddingHubScreen(component)
             is WeddingTabComponent.Child.Checklist -> ChecklistScreen(instance.component)
             is WeddingTabComponent.Child.Budget -> BudgetScreen(instance.component)
+            is WeddingTabComponent.Child.Guests -> GuestListScreen(instance.component)
         }
     }
 }
