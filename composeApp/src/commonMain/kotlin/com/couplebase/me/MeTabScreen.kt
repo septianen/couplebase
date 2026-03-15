@@ -10,6 +10,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.couplebase.feature.couple.goals.GoalListScreen
 import com.couplebase.feature.couple.profile.ProfileScreen
+import com.couplebase.feature.settings.SettingsScreen
 
 @Composable
 fun MeTabScreen(component: MeTabComponent) {
@@ -22,6 +23,7 @@ fun MeTabScreen(component: MeTabComponent) {
         when (val instance = child.instance) {
             is MeTabComponent.Child.Profile -> ProfileScreen(instance.component)
             is MeTabComponent.Child.Goals -> GoalListScreen(instance.component)
+            is MeTabComponent.Child.Settings -> SettingsScreen(instance.component)
         }
     }
 }

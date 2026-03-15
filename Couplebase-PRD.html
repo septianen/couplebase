@@ -1,0 +1,3582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Couplebase — Product Requirements Document</title>
+<style>
+@media print {
+    .page-break { page-break-before: always; }
+    body { font-size: 10pt; }
+    pre { font-size: 8pt; }
+}
+* { box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 32px;
+    color: #1a1a1a;
+    line-height: 1.6;
+    background: #fff;
+}
+h1 { font-size: 28px; border-bottom: 3px solid #C2185B; padding-bottom: 12px; margin-top: 48px; }
+h2 { font-size: 22px; color: #C2185B; margin-top: 40px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px; }
+h3 { font-size: 18px; margin-top: 28px; color: #333; }
+h4 { font-size: 15px; margin-top: 24px; color: #555; }
+p { margin: 8px 0; }
+a { color: #C2185B; }
+code {
+    background: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+}
+pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 16px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.5;
+}
+pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+}
+th {
+    background: #C2185B;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+}
+td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e0e0e0;
+}
+tr:nth-child(even) { background: #fafafa; }
+tr:hover { background: #fff0f3; }
+ul { padding-left: 24px; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 2px solid #e0e0e0; margin: 32px 0; }
+strong { color: #C2185B; }
+.header-meta {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+</style>
+</head>
+<body>
+<h1 class="page-break">Couplebase — Product Requirements Document (PRD)</h1>
+
+<p><strong>Version</strong>: 1.0</p>
+<p><strong>Date</strong>: March 10, 2026</p>
+<p><strong>Product</strong>: Couplebase — Wedding Planning & Marriage Life App</p>
+<p><strong>Platforms</strong>: Android, iOS, Web</p>
+<p><strong>Design Reference</strong>: <a href="https://www.figma.com/make/rBPqFJgEB7v5CIKQTKyPzr/Marriage-Life-Planner-UI?t=38Ne08G2CESZUWff-0">Figma — Marriage Life Planner UI</a></p>
+
+<hr>
+
+<h2 class="page-break">1. Product Overview</h2>
+
+<h3>1.1 Vision</h3>
+<p>Couplebase is the all-in-one companion for couples — from wedding planning to building a life together. It syncs in real-time between partners, works offline, and runs natively on Android, iOS, and Web from a single codebase.</p>
+
+<h3>1.2 Problem Statement</h3>
+<p>Couples today juggle multiple tools for wedding planning (spreadsheets, Pinterest, apps) and marriage life management (budget trackers, note apps, calendars). There is no single app that:</p>
+<ul>
+<li>Covers both <strong>wedding planning</strong> and <strong>ongoing marriage life</strong></li>
+<li><strong>Syncs in real-time</strong> between two partners</li>
+<li>Works <strong>offline</strong> and across all platforms</li>
+<li>Transitions seamlessly from pre-wedding to post-wedding use</li>
+</ul>
+
+
+<h3>1.3 Target Users</h3>
+<ul>
+<li><strong>Primary</strong>: Engaged couples planning their wedding (ages 24-38)</li>
+<li><strong>Secondary</strong>: Married couples managing finances, goals, and communication</li>
+<li><strong>Tertiary</strong>: Couples in long-term relationships preparing for engagement</li>
+</ul>
+
+
+<h3>1.4 Key Value Propositions</h3>
+<ul>
+<li><strong>One app for the whole journey</strong> — wedding → marriage → life goals</li>
+<li><strong>Real-time partner sync</strong> — both see changes instantly</li>
+<li><strong>Offline-first</strong> — works without internet, syncs when connected</li>
+<li><strong>Cross-platform</strong> — Android, iOS, and Web from one codebase</li>
+<li><strong>Privacy-first</strong> — couple data isolated via row-level security</li>
+</ul>
+
+
+<hr>
+
+<h2 class="page-break">2. Tech Stack</h2>
+
+<h3>2.1 Architecture Overview</h3>
+<pre><code>
+Compose UI → Decompose Component (MVI) → Use Case → Repository
+
+                                                      ├── SQLDelight (local, source of truth)
+
+                                                      └── Supabase (remote, sync)
+
+</code></pre>
+
+
+<h3>2.2 Stack Table</h3>
+
+<table>
+<thead><tr><th>Layer</th><th>Technology</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><strong>UI</strong></td><td>Compose Multiplatform 1.7+</td><td>Declarative cross-platform UI</td></tr>
+<tr><td><strong>Design</strong></td><td>Material 3</td><td>Theming, adaptive layouts</td></tr>
+<tr><td><strong>Navigation</strong></td><td>Decompose 3.x + Essenty</td><td>Lifecycle-aware multiplatform navigation</td></tr>
+<tr><td><strong>Local DB</strong></td><td>SQLDelight 2.x</td><td>Typesafe offline-first database</td></tr>
+<tr><td><strong>Backend</strong></td><td>Supabase Kotlin SDK</td><td>Auth, PostgreSQL, Realtime, Storage</td></tr>
+<tr><td><strong>Networking</strong></td><td>Ktor Client 3.x</td><td>HTTP client (OkHttp/Darwin/Js engines)</td></tr>
+<tr><td><strong>DI</strong></td><td>Koin 4.x</td><td>Lightweight multiplatform DI</td></tr>
+<tr><td><strong>Async</strong></td><td>Kotlinx Coroutines + Flow</td><td>Reactive async programming</td></tr>
+<tr><td><strong>Serialization</strong></td><td>kotlinx-serialization</td><td>JSON encoding/decoding</td></tr>
+<tr><td><strong>Date/Time</strong></td><td>kotlinx-datetime</td><td>Multiplatform date handling</td></tr>
+<tr><td><strong>Images</strong></td><td>Coil 3</td><td>Cross-platform image loading & caching</td></tr>
+<tr><td><strong>Testing</strong></td><td>kotlin.test + Turbine + Mokkery</td><td>Unit, Flow, and mock testing</td></tr>
+<tr><td><strong>Build</strong></td><td>Gradle + Convention Plugins + Version Catalog</td><td>DRY build configuration</td></tr>
+</tbody></table>
+
+
+<h3>2.3 Design Patterns</h3>
+
+<table>
+<thead><tr><th>Pattern</th><th>Where</th><th>How</th></tr></thead>
+<tbody>
+<tr><td><strong>MVI</strong> (Model-View-Intent)</td><td>Every screen</td><td>Immutable <code>UiState</code> + sealed <code>Intent</code> + <code>Component</code></td></tr>
+<tr><td><strong>Repository</strong> (Offline-First)</td><td>Data layer</td><td>Reads from SQLDelight, writes local-first then queues sync</td></tr>
+<tr><td><strong>Use Case</strong></td><td>Domain layer</td><td>Single-responsibility business operations</td></tr>
+<tr><td><strong>Decompose Components</strong></td><td>Navigation/State</td><td>Lifecycle-aware state holders (replaces ViewModel)</td></tr>
+<tr><td><strong>Queue-Based Sync</strong></td><td>Core sync</td><td>Pending changes queue → push to Supabase when online</td></tr>
+<tr><td><strong>expect/actual</strong></td><td>Platform code</td><td>Camera, notifications, connectivity, deep links</td></tr>
+</tbody></table>
+
+
+<h3>2.4 Code Examples</h3>
+
+<p><strong>MVI Pattern:</strong></p>
+<pre><code class="language-kotlin">
+@Immutable
+
+data class ChecklistUiState(
+
+    val items: List&lt;ChecklistItem&gt; = emptyList(),
+
+    val isLoading: Boolean = false,
+
+    val filter: ChecklistFilter = ChecklistFilter.ALL
+
+)
+
+
+
+sealed interface ChecklistIntent {
+
+    data class ToggleItem(val id: String) : ChecklistIntent
+
+    data class DeleteItem(val id: String) : ChecklistIntent
+
+    data class ChangeFilter(val filter: ChecklistFilter) : ChecklistIntent
+
+}
+
+
+
+class ChecklistComponent(
+
+    componentContext: ComponentContext,
+
+    private val toggleChecklistItemUseCase: ToggleChecklistItemUseCase,
+
+) : ComponentContext by componentContext {
+
+    private val _state = MutableStateFlow(ChecklistUiState())
+
+    val state: StateFlow&lt;ChecklistUiState&gt; = _state.asStateFlow()
+
+
+
+    fun onIntent(intent: ChecklistIntent) { /* ... */ }
+
+}
+
+</code></pre>
+
+
+<p><strong>Offline-First Repository:</strong></p>
+<pre><code class="language-kotlin">
+class ChecklistRepositoryImpl(
+
+    private val local: ChecklistLocalDataSource,
+
+    private val remote: ChecklistRemoteDataSource,
+
+    private val syncManager: SyncManager
+
+) : ChecklistRepository {
+
+    override fun getItems(coupleId: String): Flow&lt;List&lt;ChecklistItem&gt;&gt; =
+
+        local.getItems(coupleId).map { it.toDomainList() }
+
+
+
+    override suspend fun toggleItem(id: String, completed: Boolean) {
+
+        local.updateItem(id, completed, SyncStatus.PENDING)
+
+        syncManager.enqueueSync(SyncTask.Checklist(id))
+
+    }
+
+}
+
+</code></pre>
+
+
+<p><strong>Sync Engine:</strong></p>
+<pre><code class="language-kotlin">
+class SyncManager(
+
+    private val connectivity: ConnectivityMonitor,
+
+    private val syncQueue: SyncQueue,
+
+    private val supabase: SupabaseClient
+
+) {
+
+    fun startSync() {
+
+        connectivity.isOnline.filter { it }.collect { processQueue() }
+
+    }
+
+    fun subscribeToPartnerChanges(coupleId: String) {
+
+        supabase.realtime.channel(&quot;couple:$coupleId&quot;)
+
+            .on&lt;PostgresAction.Insert&gt;(&quot;checklist_item&quot;) { /* upsert local */ }
+
+    }
+
+}
+
+</code></pre>
+
+
+<hr>
+
+<h2 class="page-break">3. Project Structure</h2>
+
+<h3>3.1 Module Map</h3>
+<pre><code>
+couplebase/
+
+├── build-logic/convention/              # Convention plugins
+
+├── core/
+
+│   ├── :core:common                     # Extensions, Result wrapper, UUID
+
+│   ├── :core:model                      # Domain data classes (pure Kotlin)
+
+│   ├── :core:database                   # SQLDelight schemas, DAOs, migrations
+
+│   ├── :core:network                    # Supabase client, API models
+
+│   ├── :core:sync                       # SyncManager, queue, connectivity
+
+│   ├── :core:domain                     # Base UseCase, common use cases
+
+│   ├── :core:datastore                  # Preferences (DataStore multiplatform)
+
+│   └── :core:ui                         # Design system, theme, shared components
+
+├── feature/
+
+│   ├── :feature:auth                    # Login, signup, couple pairing
+
+│   ├── :feature:wedding-checklist       # Wedding task checklist
+
+│   ├── :feature:wedding-budget          # Wedding budget tracker
+
+│   ├── :feature:wedding-guests          # Guest list &amp; RSVP
+
+│   ├── :feature:wedding-vendors         # Vendor management
+
+│   ├── :feature:wedding-timeline        # Wedding day schedule
+
+│   ├── :feature:couple-profile          # Couple profile &amp; milestones
+
+│   ├── :feature:couple-goals            # Life goals &amp; shared calendar
+
+│   ├── :feature:finance-budget          # Monthly budgets
+
+│   ├── :feature:finance-expenses        # Expense tracking
+
+│   ├── :feature:finance-savings         # Savings goals
+
+│   ├── :feature:comm-notes              # Shared notes
+
+│   ├── :feature:comm-journal            # Love journal / diary
+
+│   ├── :feature:comm-checkin            # Daily check-ins &amp; mood
+
+│   └── :feature:settings                # App settings
+
+├── composeApp/
+
+│   ├── commonMain/                      # Root navigation, App.kt, root DI
+
+│   ├── androidMain/                     # MainActivity, platform specifics
+
+│   ├── iosMain/                         # MainViewController
+
+│   └── wasmJsMain/                      # Browser entry point
+
+├── gradle/libs.versions.toml
+
+└── settings.gradle.kts
+
+</code></pre>
+
+
+<h3>3.2 Module Dependency Graph</h3>
+<pre><code>
+composeApp → feature:* → core:domain → core:model
+
+                        → core:ui    → core:common
+
+
+
+core:domain → core:database → core:model + core:common
+
+            → core:network  → core:model + core:common
+
+            → core:sync     → core:database + core:network + core:common
+
+</code></pre>
+
+
+<h3>3.3 Feature Module Internal Structure</h3>
+<pre><code>
+feature/&lt;name&gt;/src/commonMain/kotlin/com/couplebase/feature/&lt;name&gt;/
+
+├── di/              # Koin module
+
+├── domain/
+
+│   ├── usecase/     # Feature-specific use cases
+
+│   └── repository/  # Repository interface
+
+├── data/
+
+│   ├── repository/  # Repository implementation (offline-first)
+
+│   ├── local/       # SQLDelight data source
+
+│   └── remote/      # Supabase data source
+
+├── presentation/
+
+│   ├── &lt;Name&gt;Component.kt    # Decompose component (MVI)
+
+│   ├── &lt;Name&gt;UiState.kt      # Immutable state
+
+│   ├── &lt;Name&gt;Intent.kt       # User actions
+
+│   └── &lt;Name&gt;Screen.kt       # Compose UI
+
+└── navigation/
+
+    └── &lt;Name&gt;Navigation.kt   # Entry point for parent nav
+
+</code></pre>
+
+
+<hr>
+
+<h2 class="page-break">4. Feature Specifications</h2>
+
+<h3>4.1 Auth & Couple Pairing (:feature:auth)</h3>
+
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Email auth</td><td>Sign up & login with email/password via Supabase GoTrue</td></tr>
+<tr><td>Social login</td><td>Google (all platforms) + Apple (iOS/Web) via expect/actual</td></tr>
+<tr><td>Create couple space</td><td>Generate 6-char invite code + shareable deep link</td></tr>
+<tr><td>Join via invite code</td><td>Enter 6-character alphanumeric code</td></tr>
+<tr><td>Join via QR code</td><td>Scan partner's QR (CameraX/AVFoundation/jsQR)</td></tr>
+<tr><td>Session management</td><td>Auto token refresh, persistent login</td></tr>
+<tr><td>RLS</td><td>Supabase Row-Level Security scopes all data to couple_id</td></tr>
+</tbody></table>
+
+
+<h3>4.2 Wedding Planning</h3>
+
+<p><strong>Checklist (:feature:wedding-checklist)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Templates</td><td>Pre-populated tasks: 12mo, 6mo, 3mo, 1mo, final week</td></tr>
+<tr><td>Custom tasks</td><td>User-created tasks with title, category, due date</td></tr>
+<tr><td>Assignment</td><td>Assign each task: Me / Partner / Both</td></tr>
+<tr><td>Filtering</td><td>All, Mine, Partner's, Completed</td></tr>
+<tr><td>Reordering</td><td>Drag-to-reorder within category groups</td></tr>
+<tr><td>Completion</td><td>Toggle complete/incomplete with sync</td></tr>
+</tbody></table>
+
+
+<p><strong>Budget (:feature:wedding-budget)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Total budget</td><td>Set overall wedding budget amount</td></tr>
+<tr><td>Categories</td><td>Predefined + custom (venue, catering, photo, attire, flowers, music, etc.)</td></tr>
+<tr><td>Allocation</td><td>Set budget per category</td></tr>
+<tr><td>Expense tracking</td><td>Log expenses against categories</td></tr>
+<tr><td>Visualization</td><td>Donut chart (total) + progress bars (per category)</td></tr>
+<tr><td>Over-budget alerts</td><td>Warning when category exceeds allocation</td></tr>
+</tbody></table>
+
+
+<p><strong>Guest List (:feature:wedding-guests)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Guest management</td><td>Add/edit/delete guests</td></tr>
+<tr><td>Import</td><td>CSV import + device contacts</td></tr>
+<tr><td>RSVP tracking</td><td>Pending, Accepted, Declined statuses</td></tr>
+<tr><td>Meal preferences</td><td>Free-text dietary/meal selection</td></tr>
+<tr><td>Seating</td><td>Table number assignment</td></tr>
+<tr><td>Plus-ones</td><td>Track plus-one per guest</td></tr>
+<tr><td>Dashboard</td><td>Summary stats (total, accepted, declined, pending)</td></tr>
+<tr><td>Export</td><td>Export to CSV</td></tr>
+</tbody></table>
+
+
+<p><strong>Vendors (:feature:wedding-vendors)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Vendor cards</td><td>Name, category, phone, email, website</td></tr>
+<tr><td>Categories</td><td>Photographer, florist, DJ, caterer, venue, bakery, etc.</td></tr>
+<tr><td>Contracts</td><td>Upload files → Supabase Storage</td></tr>
+<tr><td>Payment schedule</td><td>Track deposits, installments, final payments with due dates</td></tr>
+<tr><td>Notes & ratings</td><td>Free-text notes per vendor</td></tr>
+</tbody></table>
+
+
+<p><strong>Timeline (:feature:wedding-timeline)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Schedule builder</td><td>Add time blocks for wedding day events</td></tr>
+<tr><td>Time blocks</td><td>Start time, duration, location, description</td></tr>
+<tr><td>People assignment</td><td>Assign couple, vendors, wedding party to blocks</td></tr>
+<tr><td>Sharing</td><td>Export as shareable format (PDF/image)</td></tr>
+</tbody></table>
+
+
+<h3>4.3 Couple Profile & Goals</h3>
+
+<p><strong>Profile (:feature:couple-profile)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Couple profile</td><td>Shared photo, couple name, together-since date</td></tr>
+<tr><td>Milestones</td><td>Timeline of relationship milestones (first date, engaged, etc.)</td></tr>
+<tr><td>Status</td><td>Relationship stage (dating, engaged, married)</td></tr>
+</tbody></table>
+
+
+<p><strong>Goals (:feature:couple-goals)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Life goals</td><td>Shared goals with title, description, target date</td></tr>
+<tr><td>Milestones</td><td>Sub-milestones per goal with completion tracking</td></tr>
+<tr><td>Progress</td><td>Visual percentage progress</td></tr>
+<tr><td>Calendar</td><td>Shared calendar for important dates/reminders</td></tr>
+</tbody></table>
+
+
+<h3>4.4 Finance Management</h3>
+
+<p><strong>Budget (:feature:finance-budget)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Monthly budgets</td><td>Set income and spending categories per month</td></tr>
+<tr><td>Category limits</td><td>Set spending limit per category</td></tr>
+<tr><td>Progress tracking</td><td>Visual progress bars per category</td></tr>
+<tr><td>Comparison</td><td>Month-over-month view</td></tr>
+</tbody></table>
+
+
+<p><strong>Expenses (:feature:finance-expenses)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Quick entry</td><td>Amount, description, category, date</td></tr>
+<tr><td>Assignment</td><td>Me / Partner / Split</td></tr>
+<tr><td>Receipt capture</td><td>Photo → Supabase Storage</td></tr>
+<tr><td>Search & filter</td><td>By category, date range, partner</td></tr>
+</tbody></table>
+
+
+<p><strong>Savings (:feature:finance-savings)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Goals</td><td>Title, target amount, target date</td></tr>
+<tr><td>Contributions</td><td>Log contributions with date and amount</td></tr>
+<tr><td>Visualization</td><td>Ring chart / thermometer progress</td></tr>
+<tr><td>History</td><td>Contribution history timeline</td></tr>
+</tbody></table>
+
+
+<h3>4.5 Communication</h3>
+
+<p><strong>Notes (:feature:comm-notes)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Shared notes</td><td>Title + body (basic markdown)</td></tr>
+<tr><td>Pin</td><td>Pin important notes to top</td></tr>
+<tr><td>Real-time</td><td>Both partners edit, synced via Realtime</td></tr>
+</tbody></table>
+
+
+<p><strong>Journal (:feature:comm-journal)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Entries</td><td>Date, text, photo attachments</td></tr>
+<tr><td>Privacy</td><td>Private (only you) vs Shared (both see)</td></tr>
+<tr><td>Timeline</td><td>Chronological date-based view</td></tr>
+<tr><td>Memories</td><td>"On this day" feature from past entries</td></tr>
+</tbody></table>
+
+
+<p><strong>Check-in (:feature:comm-checkin)</strong></p>
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Daily mood</td><td>Select emoji mood (😊 😐 😔 😍 😤)</td></tr>
+<tr><td>Reflection</td><td>Optional one-line text</td></tr>
+<tr><td>Partner view</td><td>See partner's check-in after both submit</td></tr>
+<tr><td>History</td><td>Weekly mood chart for both partners</td></tr>
+</tbody></table>
+
+
+<h3>4.6 Settings (:feature:settings)</h3>
+
+<table>
+<thead><tr><th>Capability</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Account</td><td>View/edit name, email, change password</td></tr>
+<tr><td>Theme</td><td>Light / Dark / System</td></tr>
+<tr><td>Notifications</td><td>Toggle per notification type</td></tr>
+<tr><td>Currency</td><td>Select display currency</td></tr>
+<tr><td>Data export</td><td>Export all data</td></tr>
+<tr><td>Sync status</td><td>View current sync state</td></tr>
+<tr><td>Couple space</td><td>View invite code, edit wedding date, leave/delete space</td></tr>
+<tr><td>Logout</td><td>Sign out</td></tr>
+</tbody></table>
+
+
+<hr>
+
+<h2 class="page-break">5. UI Design</h2>
+
+<h3>5.1 Design Language</h3>
+<p><strong>Style</strong>: Modern & Minimal</p>
+
+<table>
+<thead><tr><th>Token</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Background</td><td>#FAFAFA (light), #121212 (dark)</td></tr>
+<tr><td>Surface</td><td>#FFFFFF (light), #1E1E1E (dark)</td></tr>
+<tr><td>Border</td><td>#E0E0E0 (light), #333333 (dark)</td></tr>
+<tr><td>Primary accent</td><td>Deep Rose #C2185B</td></tr>
+<tr><td>Primary tint</td><td>Light Rose #FCE4EC</td></tr>
+<tr><td>Secondary accent</td><td>Soft Teal #00897B (success, finance)</td></tr>
+<tr><td>Error</td><td>#D32F2F</td></tr>
+<tr><td>Warning</td><td>#F57C00</td></tr>
+<tr><td>Typography</td><td>System sans-serif (Roboto/SF Pro)</td></tr>
+<tr><td>Corner radius</td><td>12dp (cards), 8dp (buttons), 24dp (chips)</td></tr>
+<tr><td>Base spacing</td><td>16dp grid</td></tr>
+<tr><td>Elevation</td><td>2dp subtle shadows on cards</td></tr>
+<tr><td>Icons</td><td>Outlined style (Material Symbols)</td></tr>
+</tbody></table>
+
+
+<h3>5.2 Screen Wireframes</h3>
+
+<h4>Navigation Structure</h4>
+<pre><code>
+App
+
+├── Splash → Onboarding (first launch) → Auth
+
+└── Main Shell (Bottom Navigation)
+
+    ├── Tab 1: Home (Dashboard)
+
+    ├── Tab 2: Wedding
+
+    ├── Tab 3: Finance
+
+    ├── Tab 4: Us (Communication)
+
+    └── Tab 5: Me (Profile)
+
+</code></pre>
+
+
+<hr>
+
+<h4>01. Splash</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│                                  │
+
+│                                  │
+
+│                                  │
+
+│           ♡ couplebase           │
+
+│                                  │
+
+│        Plan your forever.        │
+
+│                                  │
+
+│                                  │
+
+│                                  │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>02. Onboarding (3-page horizontal pager)</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│                                  │
+
+│       ┌──────────────────┐       │
+
+│       │  [Illustration]  │       │
+
+│       └──────────────────┘       │
+
+│                                  │
+
+│     Plan Your Dream Wedding      │
+
+│   Checklists, budgets, guests    │
+
+│   — synced with your partner.    │
+
+│                                  │
+
+│          ● ○ ○                   │
+
+│                                  │
+
+│   ┌──────────────────────────┐   │
+
+│   │         Next →           │   │
+
+│   └──────────────────────────┘   │
+
+│          Skip                    │
+
+└──────────────────────────────────┘
+
+Page 2: &quot;Build Your Life Together&quot; (goals, finances, calendar)
+
+Page 3: &quot;Stay Connected&quot; (journal, check-ins) → &quot;Get Started&quot; button
+
+</code></pre>
+
+
+<h4>03. Login</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│           ♡ couplebase           │
+
+│        Welcome back              │
+
+│                                  │
+
+│   ┌──────────────────────────┐   │
+
+│   │  Email                   │   │
+
+│   └──────────────────────────┘   │
+
+│   ┌──────────────────────────┐   │
+
+│   │  Password            👁  │   │
+
+│   └──────────────────────────┘   │
+
+│        Forgot password?          │
+
+│                                  │
+
+│   ┌──────────────────────────┐   │
+
+│   │        Log In            │   │ ← Filled rose
+
+│   └──────────────────────────┘   │
+
+│   ──────── or ────────           │
+
+│   ┌──────────────────────────┐   │
+
+│   │  G  Continue with Google │   │ ← Outlined
+
+│   └──────────────────────────┘   │
+
+│   ┌──────────────────────────┐   │
+
+│   │    Continue with Apple   │   │
+
+│   └──────────────────────────┘   │
+
+│                                  │
+
+│   Don&#x27;t have an account? Sign up │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>04. Sign Up</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ←                               │
+
+│        Create Account            │
+
+│                                  │
+
+│   [Full Name]                    │
+
+│   [Email]                        │
+
+│   [Password 👁]                  │
+
+│   [Confirm Password 👁]         │
+
+│                                  │
+
+│   [  Create Account  ]          │
+
+│   ──────── or ────────           │
+
+│   [G Continue with Google]       │
+
+│                                  │
+
+│   Already have an account? Login │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>05. Couple Pairing — Choose</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ←                               │
+
+│     Connect with your partner    │
+
+│                                  │
+
+│   ┌──────────────────────────┐   │
+
+│   │ ♡ Create a new           │   │
+
+│   │   couple space           │   │
+
+│   │   Start fresh &amp; invite   │   │
+
+│   │   your partner       →   │   │
+
+│   └──────────────────────────┘   │
+
+│                                  │
+
+│   ┌──────────────────────────┐   │
+
+│   │ 🔗 Join your partner&#x27;s   │   │
+
+│   │    space                 │   │
+
+│   │    Enter code or scan QR │   │
+
+│   │                      →   │   │
+
+│   └──────────────────────────┘   │
+
+│                                  │
+
+│         Skip for now             │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>06. Couple Pairing — Invite</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ←                               │
+
+│     Invite your partner          │
+
+│                                  │
+
+│   ┌──────────────────────────┐   │
+
+│   │      A 7 X 9 K 2        │   │ ← Large monospace
+
+│   │         📋 Copy          │   │
+
+│   └──────────────────────────┘   │
+
+│         ── or ──                 │
+
+│   ┌──────────────────────────┐   │
+
+│   │      ┌──────────┐       │   │
+
+│   │      │ QR CODE  │       │   │
+
+│   │      └──────────┘       │   │
+
+│   └──────────────────────────┘   │
+
+│                                  │
+
+│   [    Share Invite Link    ]    │
+
+│                                  │
+
+│   Waiting for partner to join... │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>07. Couple Pairing — Join</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ←                               │
+
+│     Join your partner            │
+
+│   Enter the 6-digit invite code  │
+
+│                                  │
+
+│   ┌──┐ ┌──┐ ┌──┐ ┌──┐ ┌──┐ ┌──┐│
+
+│   │A │ │7 │ │X │ │9 │ │K │ │_ ││
+
+│   └──┘ └──┘ └──┘ └──┘ └──┘ └──┘│
+
+│                                  │
+
+│   [       Join       ]           │
+
+│         ── or ──                 │
+
+│   [  📷 Scan QR Code  ]         │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>08. Home Dashboard</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  couplebase              🔔  ⚙️  │
+
+│                                  │
+
+│  ┌──────────────────────────┐    │
+
+│  │  Sarah &amp; Mike       ♡    │    │
+
+│  │  Wedding: Jun 15, 2026   │    │
+
+│  │  ━━━━━━━━━━━━━━━░░ 73%   │    │
+
+│  │  97 days to go           │    │
+
+│  └──────────────────────────┘    │
+
+│                                  │
+
+│  Quick Actions                   │
+
+│  ┌──────┐ ┌──────┐ ┌──────┐     │
+
+│  │ 📋   │ │ 💰   │ │ 👥   │     │
+
+│  │Check │ │Budget│ │Guest │     │
+
+│  └──────┘ └──────┘ └──────┘     │
+
+│                                  │
+
+│  Today&#x27;s Tasks              →    │
+
+│  ┌──────────────────────────┐    │
+
+│  │ ○ Book photographer      │    │
+
+│  │   Due: Mar 15  · You     │    │
+
+│  │ ○ Finalize guest list    │    │
+
+│  │   Due: Mar 20  · Both    │    │
+
+│  │ ● Send save-the-dates ✓  │    │
+
+│  │   Completed · Partner    │    │
+
+│  └──────────────────────────┘    │
+
+│                                  │
+
+│  Daily Check-in             →    │
+
+│  ┌──────────────────────────┐    │
+
+│  │ How are you feeling?     │    │
+
+│  │ 😊 😐 😔 😍 😤         │    │
+
+│  └──────────────────────────┘    │
+
+│                                  │
+
+│  Budget Snapshot            →    │
+
+│  ┌──────────────────────────┐    │
+
+│  │ $24,500 / $35,000  70%   │    │
+
+│  │ ━━━━━━━━━━━━━░░░░         │    │
+
+│  │ $10,500 remaining        │    │
+
+│  └──────────────────────────┘    │
+
+│                                  │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+│ Home Wedding Finance Us   Me     │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>09. Wedding Tab (Hub)</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  Wedding                    🔍   │
+
+│                                  │
+
+│  ┌──────────────────────────┐    │
+
+│  │ 97 days to go            │    │
+
+│  │ Jun 15, 2026             │    │
+
+│  │ ━━━━━━━━━━━━━━━░░ 73%    │    │
+
+│  └──────────────────────────┘    │
+
+│                                  │
+
+│  ┌────────────┐ ┌────────────┐   │
+
+│  │ 📋 Check   │ │ 💰 Budget  │   │
+
+│  │   12/48    │ │   $24.5k   │   │
+
+│  └────────────┘ └────────────┘   │
+
+│  ┌────────────┐ ┌────────────┐   │
+
+│  │ 👥 Guests  │ │ 🏪 Vendors │   │
+
+│  │   142      │ │   8 booked │   │
+
+│  └────────────┘ └────────────┘   │
+
+│  ┌────────────┐                  │
+
+│  │ 📅 Timeline│                  │
+
+│  │   Day-of   │                  │
+
+│  └────────────┘                  │
+
+│                                  │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>10. Wedding Checklist</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Wedding                      │
+
+│  Checklist               + Add   │
+
+│                                  │
+
+│  [All] [Mine] [Partner] [Done]   │
+
+│                                  │
+
+│  12+ Months Before          ▾    │
+
+│  ┌──────────────────────────┐    │
+
+│  │ ● Set a budget        ✓  │    │
+
+│  │ ● Choose wedding date ✓  │    │
+
+│  └──────────────────────────┘    │
+
+│  6-12 Months Before         ▾    │
+
+│  ┌──────────────────────────┐    │
+
+│  │ ○ Book venue              │    │
+
+│  │   Both · Due Apr 1        │    │
+
+│  │ ○ Book photographer       │    │
+
+│  │   You · Due Mar 15        │    │
+
+│  └──────────────────────────┘    │
+
+│  3-6 Months Before          ▸    │
+
+│  1-3 Months Before          ▸    │
+
+│  Final Month                ▸    │
+
+│                                  │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>11. Add Checklist Item (Bottom Sheet)</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ━━━                             │
+
+│  New Task                        │
+
+│                                  │
+
+│  [Task name                    ] │
+
+│  Category  [6-12 Months Before ▾]│
+
+│  Assigned  [Me] [Partner] [Both] │
+
+│  Due date  [📅 Mar 15, 2026    ] │
+
+│                                  │
+
+│  [       Save Task       ]       │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>12. Wedding Budget</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Wedding                      │
+
+│  Budget                    ✏️    │
+
+│                                  │
+
+│  ┌──────────────────────────┐    │
+
+│  │    Total: $35,000        │    │
+
+│  │      ┌─────────┐        │    │
+
+│  │     / 70% spent \       │    │ ← Donut chart
+
+│  │    │  $24,500    │       │    │
+
+│  │     \           /       │    │
+
+│  │      └─────────┘        │    │
+
+│  │  Spent $24,500  Rem $10,500│  │
+
+│  └──────────────────────────┘    │
+
+│                                  │
+
+│  Categories              + Add   │
+
+│  ┌──────────────────────────┐    │
+
+│  │ Venue     ━━━━━━━━━━━░ $8k│   │
+
+│  │ $7,200 / $8,000           │    │
+
+│  │ Catering  ━━━━━━━░░░ $6k │    │
+
+│  │ $4,800 / $6,000           │    │
+
+│  │ Photo     ━━━━━━━░░ $4k  │    │
+
+│  │ $3,500 / $4,000           │    │
+
+│  │ Attire    ━━━━━━━━━━ $3k ⚠️│  │ ← Over budget
+
+│  │ $3,200 / $3,000           │    │
+
+│  └──────────────────────────┘    │
+
+│        (+) Add Expense           │
+
+│                                  │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>13. Guest List</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Wedding                      │
+
+│  Guest List               + Add  │
+
+│                                  │
+
+│  ┌──────┐ ┌──────┐ ┌──────┐     │
+
+│  │ 142  │ │  98  │ │  12  │     │
+
+│  │Total │ │Accept│ │Decl. │     │
+
+│  └──────┘ └──────┘ └──────┘     │
+
+│  [🔍 Search guests...]          │
+
+│  [All] [Accepted] [Pending] [Dec]│
+
+│                                  │
+
+│  ┌──────────────────────────┐    │
+
+│  │ 👤 Emma Johnson          │    │
+
+│  │   Accepted · Table 5     │    │
+
+│  │   🍽 Vegetarian  +1      │    │
+
+│  │ 👤 James Wilson          │    │
+
+│  │   Pending · No table     │    │
+
+│  │ 👤 Sofia Garcia          │    │
+
+│  │   Accepted · Table 3  +1 │    │
+
+│  └──────────────────────────┘    │
+
+│  Export CSV                      │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>14. Vendor List</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Wedding                      │
+
+│  Vendors                  + Add  │
+
+│                                  │
+
+│  ┌──────────────────────────┐    │
+
+│  │ 📷 Stellar Photography   │    │
+
+│  │   Photography             │    │
+
+│  │   $2,000 / $3,500 paid   │    │
+
+│  │   Next: $750 due Apr 1   │    │
+
+│  ├──────────────────────────┤    │
+
+│  │ 🌸 Bloom &amp; Petal         │    │
+
+│  │   Florist · Paid in full ✓│   │
+
+│  ├──────────────────────────┤    │
+
+│  │ 🎵 DJ Marcus             │    │
+
+│  │   Music · $500/$1,800    │    │
+
+│  │   Next: $650 due May 1   │    │
+
+│  └──────────────────────────┘    │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>15. Vendor Detail</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Vendors                 ✏️   │
+
+│  Stellar Photography             │
+
+│  Photography                     │
+
+│                                  │
+
+│  Contact                         │
+
+│  📞 (555) 123-4567              │
+
+│  📧 info@stellar.com            │
+
+│  🌐 stellar-photo.com           │
+
+│                                  │
+
+│  Contract                        │
+
+│  📄 contract.pdf  📎             │
+
+│                                  │
+
+│  Payment Schedule                │
+
+│  ● $1,000  Deposit     ✓        │
+
+│  ● $1,000  2nd payment ✓        │
+
+│  ○ $750   3rd (Apr 1)           │
+
+│  ○ $750   Final (Jun 1)         │
+
+│                                  │
+
+│  Notes                           │
+
+│  &quot;Great at outdoor shoots.&quot;      │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>16. Wedding Day Timeline</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Wedding                      │
+
+│  Wedding Day Timeline     + Add  │
+
+│  June 15, 2026                   │
+
+│                                  │
+
+│  10:00 AM  Hair &amp; Makeup         │
+
+│  │         Bride&#x27;s suite · 2h    │
+
+│  │                               │
+
+│  12:00 PM  First Look Photos     │
+
+│  │         Garden · 45m          │
+
+│  │                               │
+
+│   1:00 PM  Ceremony              │
+
+│  │         Main Chapel · 30m     │
+
+│  │                               │
+
+│   1:45 PM  Cocktail Hour         │
+
+│  │         Terrace · 1h          │
+
+│  │                               │
+
+│   3:00 PM  Reception             │
+
+│            Grand Hall · 4h       │
+
+│                                  │
+
+│  [  📤 Share Timeline  ]         │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>17. Finance Tab (Hub)</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  Finance                         │
+
+│  March 2026              &lt; &gt;     │
+
+│                                  │
+
+│  ┌──────────────────────────┐    │
+
+│  │ Income     $8,500        │    │
+
+│  │ Expenses   $5,200        │    │
+
+│  │ ─────────────────        │    │
+
+│  │ Remaining  $3,300 (green)│    │
+
+│  └──────────────────────────┘    │
+
+│                                  │
+
+│  ┌──────────┐ ┌──────────┐      │
+
+│  │📊 Budget │ │💳 Expenses│      │
+
+│  └──────────┘ └──────────┘      │
+
+│  ┌──────────┐                    │
+
+│  │🎯 Savings│                    │
+
+│  └──────────┘                    │
+
+│                                  │
+
+│  Recent Expenses                 │
+
+│  Groceries      -$142.50 Today   │
+
+│  Electric bill   -$89.00 Yest.   │
+
+│  Date night      -$75.00 Mar 8   │
+
+│                                  │
+
+│        (+) Add Expense           │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>18. Monthly Budget Detail</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Finance                      │
+
+│  Monthly Budget       March &lt; &gt;  │
+
+│                                  │
+
+│  Housing     $1,800              │
+
+│  ━━━━━━━━━━━━━━━░ 90%            │
+
+│  Food        $800                │
+
+│  ━━━━━━━━━━░░░░ 65%              │
+
+│  Transport   $400                │
+
+│  ━━━━━━░░░░░░ 45%                │
+
+│  Entertainment $300   ⚠️         │
+
+│  ━━━━━━━━━━━━━━━━ 110%           │
+
+│  Savings     $1,000   ✓         │
+
+│  ━━━━━━━━━━━━━━━━ 100%           │
+
+│                                  │
+
+│       + Add Category             │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>19. Add Expense (Bottom Sheet)</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ━━━                             │
+
+│  Add Expense                     │
+
+│         $ 0.00                   │ ← Large input
+
+│  [Description                  ] │
+
+│  Category [Food &amp; Dining      ▾] │
+
+│  Paid by  [Me] [Partner] [Split] │
+
+│  Date     [📅 Today, Mar 10   ] │
+
+│  [📷 Add Receipt Photo]         │
+
+│  [     Save Expense      ]      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>20. Savings Goals</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Finance                      │
+
+│  Savings Goals            + Add  │
+
+│                                  │
+
+│  ┌──────────────────────────┐    │
+
+│  │ 🏠 House Down Payment    │    │
+
+│  │    ┌───────┐             │    │
+
+│  │   / 35%    \            │    │ ← Ring chart
+
+│  │  │ $17,500  │            │    │
+
+│  │   \ of $50k /            │    │
+
+│  │    └───────┘             │    │
+
+│  │  Target: Dec 2027        │    │
+
+│  │  + Add Contribution      │    │
+
+│  └──────────────────────────┘    │
+
+│  ┌──────────────────────────┐    │
+
+│  │ ✈️  Honeymoon Fund       │    │
+
+│  │   80% · $4,000 / $5,000  │    │
+
+│  │  Target: May 2026        │    │
+
+│  │  + Add Contribution      │    │
+
+│  └──────────────────────────┘    │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>21. Us Tab (Communication Hub)</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  Us                              │
+
+│                                  │
+
+│  Daily Check-in                  │
+
+│  ┌──────────────────────────┐    │
+
+│  │ How are you feeling?     │    │
+
+│  │ 😊  😐  😔  😍  😤     │    │
+
+│  │ [One thought today...   ]│    │
+
+│  │ [    Submit Check-in    ]│    │
+
+│  └──────────────────────────┘    │
+
+│                                  │
+
+│  ┌──────────┐ ┌──────────┐      │
+
+│  │📝 Notes  │ │📖 Journal│      │
+
+│  │  12 notes│ │ 28 entries│      │
+
+│  └──────────┘ └──────────┘      │
+
+│                                  │
+
+│  Partner&#x27;s Mood Today            │
+
+│  ┌──────────────────────────┐    │
+
+│  │ 😍 &quot;Excited about cake   │    │
+
+│  │    tasting tomorrow!&quot;    │    │
+
+│  └──────────────────────────┘    │
+
+│                                  │
+
+│  This Week&#x27;s Moods               │
+
+│  M  T  W  T  F  S  S            │
+
+│  😊 😍 😐 😊 😍 ·  · You       │
+
+│  😊 😊 😍 😐 😊 ·  · Partner   │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>22. Shared Notes</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Us                           │
+
+│  Notes                    + New  │
+
+│                                  │
+
+│  📌 Grocery List                 │
+
+│     Updated 2h ago               │
+
+│  📌 House Hunting Criteria       │
+
+│     Updated yesterday            │
+
+│  📝 Restaurant Ideas             │
+
+│     Updated Mar 5                │
+
+│  📝 Gift Ideas - Parents         │
+
+│     Updated Feb 28               │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>23. Love Journal</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Us                           │
+
+│  Journal                  + New  │
+
+│  [  All  ] [  Shared  ]         │
+
+│                                  │
+
+│  March 2026                      │
+
+│  ┌──────────────────────────┐    │
+
+│  │ Mar 10 — &quot;Planning seating│   │
+
+│  │  charts and laughing...&quot;  │    │
+
+│  │  🔒 Private       📷 2   │    │
+
+│  │ Mar 8 — &quot;Date night at   │    │
+
+│  │  the Thai place!&quot;         │    │
+
+│  │  💑 Shared        📷 1   │    │
+
+│  └──────────────────────────┘    │
+
+│                                  │
+
+│  💡 On this day last year...     │
+
+│  &quot;First time visiting the venue&quot; │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>24. Me / Profile</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  Profile                    ⚙️   │
+
+│                                  │
+
+│       ┌────────┐                │
+
+│       │ 👫     │                │
+
+│       └────────┘                │
+
+│     Sarah &amp; Mike                 │
+
+│     Together since 2022 · ♡      │
+
+│                                  │
+
+│  Milestones                      │
+
+│  ●── First Date · Jun 2022      │
+
+│  │                               │
+
+│  ●── First Trip · Sep 2022      │
+
+│  │                               │
+
+│  ●── Moved In · Mar 2023        │
+
+│  │                               │
+
+│  ●── Engaged! · Mar 5, 2025     │
+
+│  │                               │
+
+│  ○── Wedding · Jun 15, 2026     │
+
+│      97 days to go               │
+
+│                                  │
+
+│  Life Goals                 →    │
+
+│  🏠 Buy a house     35%         │
+
+│  ✈️  Honeymoon       80%         │
+
+│  🐕 Get a dog        0%         │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>25. Life Goals</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Profile                      │
+
+│  Life Goals               + Add  │
+
+│                                  │
+
+│  ┌──────────────────────────┐    │
+
+│  │ 🏠 Buy a House    35%    │    │
+
+│  │ ━━━━━━░░░░░░░░░░          │    │
+
+│  │ ● Save for down payment  │    │
+
+│  │ ● Get pre-approved       │    │
+
+│  │ ○ Find a realtor         │    │
+
+│  │ ○ House hunting          │    │
+
+│  │ ○ Close on house         │    │
+
+│  └──────────────────────────┘    │
+
+│  ┌──────────────────────────┐    │
+
+│  │ ✈️  Honeymoon Italy  80%  │    │
+
+│  │ ━━━━━━━━━━━━━━░░░         │    │
+
+│  │ ● Book flights           │    │
+
+│  │ ● Book hotels            │    │
+
+│  │ ○ Plan itinerary         │    │
+
+│  └──────────────────────────┘    │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>26. Settings</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Profile                      │
+
+│  Settings                        │
+
+│                                  │
+
+│  Account                         │
+
+│  👤 Sarah Miller · sarah@...  →  │
+
+│  🔒 Change Password           →  │
+
+│                                  │
+
+│  Couple Space                    │
+
+│  🔗 Invite Code: A7X9K2      📋 │
+
+│  📅 Wedding Date: Jun 15     →  │
+
+│                                  │
+
+│  Preferences                     │
+
+│  🎨 Theme: System             →  │
+
+│  🔔 Notifications: Enabled    →  │
+
+│  💱 Currency: USD ($)          →  │
+
+│                                  │
+
+│  Data                            │
+
+│  📤 Export Data               →  │
+
+│  🔄 Sync: All synced ✓        →  │
+
+│                                  │
+
+│  [      Log Out      ]  ← Red   │
+
+│  [  Leave Couple Space]  ← Red   │
+
+│                                  │
+
+│  couplebase v1.0.0               │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>27. Notifications</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Home                         │
+
+│  Notifications                   │
+
+│                                  │
+
+│  Today                           │
+
+│  😍 Mike checked in · 2h ago    │
+
+│  ✓ &quot;Save-the-dates&quot; done · 4h   │
+
+│                                  │
+
+│  Yesterday                       │
+
+│  💰 Mike added expense $89      │
+
+│  ⏰ Payment reminder: DJ $650   │
+
+│                                  │
+
+│  This Week                       │
+
+│  📝 &quot;Grocery List&quot; updated      │
+
+│  👥 3 guests RSVP&#x27;d             │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h4>28. Empty State (Generic Pattern)</h4>
+<pre><code>
+┌──────────────────────────────────┐
+
+│  ← Section                      │
+
+│  Feature Name                    │
+
+│                                  │
+
+│         ┌──────────┐            │
+
+│         │ [icon]   │            │
+
+│         └──────────┘            │
+
+│     No [items] yet               │
+
+│   [Helpful description of        │
+
+│    what this feature does]       │
+
+│                                  │
+
+│   [  + Add First [Item]  ]      │
+
+├──────────────────────────────────┤
+
+│ 🏠    📋    💰    💬    👤      │
+
+└──────────────────────────────────┘
+
+</code></pre>
+
+
+<h3>5.3 Navigation Flow</h3>
+<pre><code>
+Splash
+
+├── (first launch) → Onboarding [3 pages] → Login/Signup
+
+└── (returning user) → Home
+
+
+
+Auth: Login ↔ Signup → Couple Pairing (Create/Join) → Home
+
+
+
+Main Tabs:
+
+Home ─── Dashboard
+
+│        └── Notifications
+
+Wedding ─ Hub
+
+│        ├── Checklist ── Add/Edit (sheet)
+
+│        ├── Budget ───── Add Expense (sheet)
+
+│        ├── Guests ───── Add/Edit Guest (sheet)
+
+│        ├── Vendors ──── Detail ── Add Vendor (sheet)
+
+│        └── Timeline ─── Add Block (sheet)
+
+Finance ─ Hub
+
+│        ├── Budget ───── Edit Categories
+
+│        ├── Expenses ─── Add Expense (sheet)
+
+│        └── Savings ──── Detail ── Add Contribution
+
+Us ────── Hub
+
+│        ├── Check-in (inline)
+
+│        ├── Notes ────── Note Detail
+
+│        └── Journal ──── Entry Detail
+
+Me ────── Profile
+
+         ├── Milestones
+
+         ├── Life Goals ── Goal Detail
+
+         └── Settings ──── Sub-settings pages
+
+</code></pre>
+
+
+<hr>
+
+<h2 class="page-break">6. Database Schema</h2>
+
+<h3>Core Tables</h3>
+<pre><code class="language-sql">
+CREATE TABLE couple (
+
+  id TEXT PRIMARY KEY,
+
+  invite_code TEXT UNIQUE NOT NULL,
+
+  partner1_id TEXT NOT NULL,
+
+  partner2_id TEXT,
+
+  couple_name TEXT,
+
+  wedding_date TEXT,
+
+  photo_url TEXT,
+
+  together_since TEXT,
+
+  created_at TEXT NOT NULL,
+
+  updated_at TEXT NOT NULL,
+
+  sync_status TEXT NOT NULL DEFAULT &#x27;SYNCED&#x27;
+
+);
+
+
+
+CREATE TABLE user_profile (
+
+  id TEXT PRIMARY KEY,
+
+  couple_id TEXT,
+
+  full_name TEXT NOT NULL,
+
+  email TEXT NOT NULL,
+
+  avatar_url TEXT,
+
+  created_at TEXT NOT NULL,
+
+  updated_at TEXT NOT NULL,
+
+  sync_status TEXT NOT NULL DEFAULT &#x27;SYNCED&#x27;
+
+);
+
+</code></pre>
+
+
+<h3>Wedding Tables</h3>
+<pre><code class="language-sql">
+CREATE TABLE checklist_item (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  title TEXT NOT NULL, category TEXT, due_date TEXT,
+
+  assigned_to TEXT, is_completed INTEGER DEFAULT 0,
+
+  sort_order INTEGER DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE budget_category (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  name TEXT NOT NULL, allocated_amount REAL DEFAULT 0,
+
+  icon TEXT, sort_order INTEGER DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE expense (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  category_id TEXT, description TEXT NOT NULL,
+
+  amount REAL NOT NULL, paid_by TEXT,
+
+  receipt_url TEXT, date TEXT NOT NULL,
+
+  is_wedding_expense INTEGER DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE guest (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  name TEXT NOT NULL, email TEXT, phone TEXT,
+
+  rsvp_status TEXT DEFAULT &#x27;PENDING&#x27;, meal_preference TEXT,
+
+  table_number INTEGER, has_plus_one INTEGER DEFAULT 0,
+
+  notes TEXT,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE vendor (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  name TEXT NOT NULL, category TEXT NOT NULL,
+
+  phone TEXT, email TEXT, website TEXT,
+
+  total_cost REAL DEFAULT 0, notes TEXT,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE vendor_payment (
+
+  id TEXT PRIMARY KEY, vendor_id TEXT NOT NULL,
+
+  couple_id TEXT NOT NULL, description TEXT NOT NULL,
+
+  amount REAL NOT NULL, due_date TEXT NOT NULL,
+
+  is_paid INTEGER DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE timeline_block (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  title TEXT NOT NULL, start_time TEXT NOT NULL,
+
+  duration_minutes INTEGER NOT NULL,
+
+  location TEXT, description TEXT,
+
+  assigned_people TEXT, sort_order INTEGER DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+</code></pre>
+
+
+<h3>Life & Finance Tables</h3>
+<pre><code class="language-sql">
+CREATE TABLE milestone (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  title TEXT NOT NULL, date TEXT NOT NULL,
+
+  description TEXT, icon TEXT,
+
+  sort_order INTEGER DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE life_goal (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  title TEXT NOT NULL, description TEXT,
+
+  target_date TEXT, progress INTEGER DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE goal_milestone (
+
+  id TEXT PRIMARY KEY, goal_id TEXT NOT NULL,
+
+  couple_id TEXT NOT NULL, title TEXT NOT NULL,
+
+  is_completed INTEGER DEFAULT 0, sort_order INTEGER DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE monthly_budget (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  year_month TEXT NOT NULL, category TEXT NOT NULL,
+
+  limit_amount REAL NOT NULL, income_amount REAL DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE savings_goal (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  title TEXT NOT NULL, target_amount REAL NOT NULL,
+
+  current_amount REAL DEFAULT 0, target_date TEXT,
+
+  icon TEXT,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE savings_contribution (
+
+  id TEXT PRIMARY KEY, goal_id TEXT NOT NULL,
+
+  couple_id TEXT NOT NULL, amount REAL NOT NULL,
+
+  date TEXT NOT NULL, note TEXT,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+</code></pre>
+
+
+<h3>Communication Tables</h3>
+<pre><code class="language-sql">
+CREATE TABLE shared_note (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  title TEXT NOT NULL, body TEXT DEFAULT &#x27;&#x27;,
+
+  is_pinned INTEGER DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE journal_entry (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  author_id TEXT NOT NULL, body TEXT NOT NULL,
+
+  is_shared INTEGER DEFAULT 0, date TEXT NOT NULL,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE journal_photo (
+
+  id TEXT PRIMARY KEY, entry_id TEXT NOT NULL,
+
+  couple_id TEXT NOT NULL, photo_url TEXT NOT NULL,
+
+  sort_order INTEGER DEFAULT 0,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;,
+
+  is_deleted INTEGER DEFAULT 0
+
+);
+
+
+
+CREATE TABLE daily_checkin (
+
+  id TEXT PRIMARY KEY, couple_id TEXT NOT NULL,
+
+  user_id TEXT NOT NULL, date TEXT NOT NULL,
+
+  mood TEXT NOT NULL, reflection TEXT,
+
+  updated_at TEXT NOT NULL, sync_status TEXT DEFAULT &#x27;PENDING&#x27;
+
+);
+
+
+
+CREATE TABLE sync_queue (
+
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+  table_name TEXT NOT NULL,
+
+  record_id TEXT NOT NULL,
+
+  operation TEXT NOT NULL,
+
+  created_at TEXT NOT NULL,
+
+  retry_count INTEGER DEFAULT 0
+
+);
+
+</code></pre>
+
+
+<hr>
+
+<h2 class="page-break">7. Development Tasks</h2>
+
+<h3>Epic 0: Git & Repository Setup</h3>
+
+<p><strong>TASK-000: Initialize Git repository and remote origin</strong></p>
+<ul>
+<li><code>git init</code> in project root</li>
+<li>Create <code>.gitignore</code> (Kotlin, Gradle, Android, iOS, Node, IDE files)</li>
+<li>Create initial <code>README.md</code> with project name and description</li>
+<li>Create <code>main</code> branch with initial commit: <code>init: initialize couplebase repository</code></li>
+<li>Create GitHub repository via <code>gh repo create couplebase --private</code></li>
+<li>Set remote origin: <code>git remote add origin <repo-url></code></li>
+<li>Push <code>main</code> to remote</li>
+<li>Create <code>develop</code> branch off <code>main</code>, push to remote</li>
+<li>Set <code>develop</code> as default working branch</li>
+<li>Configure branch protection on <code>main</code> (no direct push, require PR)</li>
+<li>Deliverable: GitHub repo with <code>main</code> and <code>develop</code> branches, ready for feature branches</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 1: Project Scaffold & Build System</h3>
+
+<p><strong>TASK-001: Initialize KMP project</strong></p>
+<ul>
+<li>Create root <code>build.gradle.kts</code> with KMP plugins</li>
+<li>Create <code>settings.gradle.kts</code> with all module includes</li>
+<li>Create <code>gradle/libs.versions.toml</code> version catalog with all dependencies</li>
+<li>Configure Kotlin 2.1+, Compose Multiplatform 1.7+, Android SDK targets</li>
+<li>Deliverable: Empty project that configures and syncs in IDE</li>
+</ul>
+
+
+<p><strong>TASK-002: Create build-logic convention plugins</strong></p>
+<ul>
+<li><code>KmpLibraryConventionPlugin</code> — base KMP library module setup</li>
+<li><code>KmpComposeConventionPlugin</code> — KMP + Compose Multiplatform</li>
+<li><code>KmpFeatureConventionPlugin</code> — feature module (compose + koin + decompose)</li>
+<li>Apply common Kotlin options (JVM target, opt-ins, etc.)</li>
+<li>Deliverable: Feature modules apply <code>id("couplebase.kmp.feature")</code> and get full setup</li>
+</ul>
+
+
+<p><strong>TASK-003: Create all module directories with build.gradle.kts</strong></p>
+<ul>
+<li>Create 8 core modules + 15 feature modules + composeApp</li>
+<li>Each module has <code>src/commonMain</code>, <code>src/androidMain</code>, <code>src/iosMain</code>, <code>src/wasmJsMain</code></li>
+<li>Each applies the appropriate convention plugin</li>
+<li>Deliverable: <code>./gradlew build</code> succeeds (empty modules)</li>
+</ul>
+
+
+<p><strong>TASK-004: Setup composeApp platform entry points</strong></p>
+<ul>
+<li><code>androidMain</code>: <code>MainActivity.kt</code>, <code>AndroidManifest.xml</code></li>
+<li><code>iosMain</code>: <code>MainViewController.kt</code></li>
+<li><code>wasmJsMain</code>: <code>main.kt</code> with browser entry</li>
+<li>Minimal "Hello Couplebase" screen on all 3 platforms</li>
+<li>Deliverable: App launches on Android emulator, iOS simulator, and browser</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 2: Core Infrastructure</h3>
+
+<p><strong>TASK-005: :core:common module</strong></p>
+<ul>
+<li><code>Result<T></code> wrapper (Success/Error) for use case returns</li>
+<li><code>UuidGenerator</code> (expect/actual: <code>java.util.UUID</code> / <code>platform.Foundation.NSUUID</code> / <code>crypto.randomUUID</code>)</li>
+<li><code>DateTimeExt.kt</code> — kotlinx-datetime extension functions</li>
+<li><code>FlowExt.kt</code> — common Flow operators</li>
+<li>Deliverable: Utility functions available to all modules</li>
+</ul>
+
+
+<p><strong>TASK-006: :core:model module</strong></p>
+<ul>
+<li>All domain data classes (pure Kotlin, no framework deps):</li>
+<li><code>User</code>, <code>Couple</code>, <code>ChecklistItem</code>, <code>BudgetCategory</code>, <code>Expense</code></li>
+<li><code>Guest</code>, <code>Vendor</code>, <code>VendorPayment</code>, <code>TimelineBlock</code></li>
+<li><code>Milestone</code>, <code>LifeGoal</code>, <code>GoalMilestone</code></li>
+<li><code>MonthlyBudget</code>, <code>SavingsGoal</code>, <code>SavingsContribution</code></li>
+<li><code>SharedNote</code>, <code>JournalEntry</code>, <code>DailyCheckin</code></li>
+<li><code>SyncStatus</code> enum, <code>ChecklistFilter</code> enum, <code>RsvpStatus</code> enum, etc.</li>
+<li>Deliverable: All domain types defined and importable</li>
+</ul>
+
+
+<p><strong>TASK-007: :core:database module — SQLDelight setup</strong></p>
+<ul>
+<li>Configure SQLDelight for all 3 platform drivers</li>
+<li>Create all <code>.sq</code> files from schema (Section 6)</li>
+<li>Platform-specific driver factories (expect/actual)</li>
+<li>Database singleton with <code>CouplebaseDatabase</code> interface</li>
+<li>Deliverable: Database creates on all platforms, generated DAO code compiles</li>
+</ul>
+
+
+<p><strong>TASK-008: :core:database module — Queries & DAOs</strong></p>
+<ul>
+<li>Write SQLDelight queries for each table:</li>
+<li>CRUD operations</li>
+<li><code>Flow</code>-returning queries for reactive reads</li>
+<li>Filter/search queries (checklist by filter, guests by status, etc.)</li>
+<li><code>getByCouple(coupleId)</code> on all couple-scoped tables</li>
+<li>Pending sync queries: <code>getBySyncStatus('PENDING')</code></li>
+<li>Deliverable: All queries compile and generate correct Kotlin</li>
+</ul>
+
+
+<p><strong>TASK-009: :core:network module</strong></p>
+<ul>
+<li>Supabase client initialization (expect/actual for platform config)</li>
+<li><code>SupabaseProvider</code> singleton with auth, postgrest, realtime, storage modules</li>
+<li>API response DTOs with kotlinx-serialization <code>@Serializable</code></li>
+<li>DTO ↔ Domain model mappers</li>
+<li>Deliverable: Supabase client initializes on all platforms</li>
+</ul>
+
+
+<p><strong>TASK-010: :core:datastore module</strong></p>
+<ul>
+<li>Multiplatform DataStore preferences</li>
+<li><code>UserPreferences</code>: theme, onboarding completed, last sync time</li>
+<li><code>CouplePreferences</code>: couple_id, wedding_date (cached locally)</li>
+<li>Deliverable: Preferences read/write works on all platforms</li>
+</ul>
+
+
+<p><strong>TASK-011: :core:domain module</strong></p>
+<ul>
+<li>Base <code>UseCase</code> interface / conventions</li>
+<li>Common use cases: <code>GetCurrentCoupleUseCase</code>, <code>IsLoggedInUseCase</code></li>
+<li>Deliverable: Domain layer foundation ready</li>
+</ul>
+
+
+<p><strong>TASK-012: :core:ui module — Design system</strong></p>
+<ul>
+<li><code>CouplebaseTheme.kt</code> — Material 3 theme (light + dark)</li>
+<li>Color tokens: rose primary, teal secondary, surfaces, errors</li>
+<li>Typography scale: headline, title, body, label sizes</li>
+<li>Spacing system: 4/8/12/16/24/32dp tokens</li>
+<li>Shape system: 8dp buttons, 12dp cards, 24dp chips</li>
+<li>Deliverable: Theme applies consistently across platforms</li>
+</ul>
+
+
+<p><strong>TASK-013: :core:ui module — Shared components</strong></p>
+<ul>
+<li><code>CbButton</code> — primary, outlined, text variants</li>
+<li><code>CbTextField</code> — with label, error state, password toggle</li>
+<li><code>CbCard</code> — elevated card with consistent styling</li>
+<li><code>CbTopBar</code> — with back button, title, trailing actions</li>
+<li><code>CbBottomSheet</code> — modal bottom sheet wrapper</li>
+<li><code>CbEmptyState</code> — icon + message + CTA pattern</li>
+<li><code>CbProgressBar</code> — linear progress with percentage label</li>
+<li><code>CbChip</code> — filter chip, toggle chip</li>
+<li><code>CbLoadingIndicator</code> — centered circular spinner</li>
+<li>Deliverable: Reusable component library ready</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 3: Navigation & App Shell</h3>
+
+<p><strong>TASK-014: Root Decompose navigation</strong></p>
+<ul>
+<li><code>RootComponent</code> with <code>childStack</code> (Auth ↔ Main)</li>
+<li>Serializable <code>Config</code> sealed interface</li>
+<li>Child factory creating auth/main components</li>
+<li>Deliverable: App navigates between auth and main shells</li>
+</ul>
+
+
+<p><strong>TASK-015: Main shell with bottom navigation</strong></p>
+<ul>
+<li><code>MainComponent</code> with 5 tabs: Home, Wedding, Finance, Us, Me</li>
+<li><code>ChildPages</code> or <code>ChildStack</code> per tab with independent back stacks</li>
+<li>Bottom navigation bar composable with Material 3 <code>NavigationBar</code></li>
+<li>Deliverable: 5-tab navigation with placeholder screens</li>
+</ul>
+
+
+<p><strong>TASK-016: Deep link infrastructure</strong></p>
+<ul>
+<li>Platform-specific deep link handling (expect/actual)</li>
+<li>Android: intent filter for <code>couplebase://join/{code}</code></li>
+<li>iOS: Universal Links config</li>
+<li>Web: URL routing</li>
+<li>Route deep links to appropriate Decompose configs</li>
+<li>Deliverable: Deep links resolve to correct screens</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 4: Auth & Couple Pairing</h3>
+
+<p><strong>TASK-017: Auth — Login screen</strong></p>
+<ul>
+<li><code>LoginComponent</code> (MVI): state, intents, Supabase auth calls</li>
+<li><code>LoginScreen</code> composable matching wireframe 03</li>
+<li>Email + password fields with validation</li>
+<li>"Forgot password" flow (Supabase reset email)</li>
+<li>Navigation to signup</li>
+<li>Deliverable: Users can log in with email/password</li>
+</ul>
+
+
+<p><strong>TASK-018: Auth — Signup screen</strong></p>
+<ul>
+<li><code>SignupComponent</code> with form validation</li>
+<li><code>SignupScreen</code> composable matching wireframe 04</li>
+<li>Name, email, password, confirm password</li>
+<li>Supabase <code>signUpWith(Email)</code> integration</li>
+<li>Deliverable: Users can create accounts</li>
+</ul>
+
+
+<p><strong>TASK-019: Auth — Social login</strong></p>
+<ul>
+<li>Google Sign-In (expect/actual per platform)</li>
+<li>Apple Sign-In (iOS + Web only)</li>
+<li><code>SocialAuthProvider</code> interface with platform implementations</li>
+<li>Deliverable: Social login works on all supported platforms</li>
+</ul>
+
+
+<p><strong>TASK-020: Couple pairing — Create space</strong></p>
+<ul>
+<li><code>CreateCoupleUseCase</code> — generates couple record + 6-char invite code</li>
+<li>Supabase insert + RLS policy for couple-scoped data</li>
+<li><code>PairingScreen</code> matching wireframe 05 (choose create/join)</li>
+<li>Deliverable: Partner 1 can create a couple space</li>
+</ul>
+
+
+<p><strong>TASK-021: Couple pairing — Invite screen</strong></p>
+<ul>
+<li><code>InviteScreen</code> matching wireframe 06</li>
+<li>QR code generation (shared KMP library: <code>qrcode-kotlin</code>)</li>
+<li>Copy invite code to clipboard</li>
+<li>System share sheet for invite link</li>
+<li>Realtime listener: detect when partner 2 joins</li>
+<li>Deliverable: Invite code + QR + share link all work</li>
+</ul>
+
+
+<p><strong>TASK-022: Couple pairing — Join screen</strong></p>
+<ul>
+<li><code>JoinScreen</code> matching wireframe 07</li>
+<li>6-digit code input with individual character fields</li>
+<li>QR scanner (expect/actual: CameraX / AVFoundation / jsQR)</li>
+<li><code>JoinCoupleUseCase</code> — validates code, links user to couple</li>
+<li>Deliverable: Partner 2 can join via code or QR</li>
+</ul>
+
+
+<p><strong>TASK-023: Auth — Session management</strong></p>
+<ul>
+<li>Auto token refresh via Supabase SDK</li>
+<li>Persistent login check on app launch</li>
+<li>Logout flow (clear local data + navigate to login)</li>
+<li>Deliverable: Users stay logged in across app restarts</li>
+</ul>
+
+
+<p><strong>TASK-024: Supabase RLS policies</strong></p>
+<ul>
+<li>Write PostgreSQL RLS policies for ALL tables</li>
+<li>All SELECT/INSERT/UPDATE/DELETE scoped to <code>couple_id</code></li>
+<li>Users can only access rows where <code>couple_id</code> matches their couple</li>
+<li>Test with 2 different couple accounts</li>
+<li>Deliverable: Data isolation verified between couples</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 5: Home Dashboard</h3>
+
+<p><strong>TASK-025: Home dashboard screen</strong></p>
+<ul>
+<li><code>HomeComponent</code> composing data from multiple features</li>
+<li><code>HomeScreen</code> matching wireframe 08</li>
+<li>Wedding countdown card (days to wedding, progress bar)</li>
+<li>Quick action grid (checklist, budget, guests)</li>
+<li>Today's tasks section (from checklist, filtered by due date)</li>
+<li>Inline daily check-in widget</li>
+<li>Budget snapshot card</li>
+<li>Deliverable: Dashboard shows aggregated data from all features</li>
+</ul>
+
+
+<p><strong>TASK-026: Notifications screen</strong></p>
+<ul>
+<li><code>NotificationComponent</code> + <code>NotificationScreen</code> matching wireframe 27</li>
+<li>Local notification model (activity feed from sync events)</li>
+<li>Grouped by: Today, Yesterday, This Week</li>
+<li>Types: partner check-in, task completed, expense added, RSVP, payment reminder</li>
+<li>Deliverable: Notification feed displays recent activity</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 6: Wedding Checklist</h3>
+
+<p><strong>TASK-027: Checklist — Data layer</strong></p>
+<ul>
+<li><code>ChecklistLocalDataSource</code> — SQLDelight queries wrapper</li>
+<li><code>ChecklistRemoteDataSource</code> — Supabase postgrest calls</li>
+<li><code>ChecklistRepositoryImpl</code> — offline-first implementation</li>
+<li>Koin DI module registration</li>
+<li>Deliverable: Checklist CRUD works offline with sync queueing</li>
+</ul>
+
+
+<p><strong>TASK-028: Checklist — Use cases</strong></p>
+<ul>
+<li><code>GetChecklistItemsUseCase(filter)</code> — returns Flow grouped by category</li>
+<li><code>ToggleChecklistItemUseCase</code> — toggle completion</li>
+<li><code>AddChecklistItemUseCase</code> — create new item</li>
+<li><code>DeleteChecklistItemUseCase</code> — soft delete</li>
+<li><code>LoadChecklistTemplateUseCase</code> — pre-populate template tasks</li>
+<li>Deliverable: All business logic encapsulated in use cases</li>
+</ul>
+
+
+<p><strong>TASK-029: Checklist — UI</strong></p>
+<ul>
+<li><code>ChecklistComponent</code> (MVI) — state with grouped items, filter</li>
+<li><code>ChecklistScreen</code> matching wireframe 10</li>
+<li>Filter chips (All, Mine, Partner, Done)</li>
+<li>Collapsible category sections</li>
+<li>Swipe-to-complete, swipe-to-delete</li>
+<li><code>AddChecklistItemSheet</code> matching wireframe 11</li>
+<li>Deliverable: Full checklist UI with all interactions</li>
+</ul>
+
+
+<p><strong>TASK-030: Checklist — Templates</strong></p>
+<ul>
+<li>JSON/resource file with pre-populated wedding tasks</li>
+<li>Categories: 12+ months, 6-12 months, 3-6 months, 1-3 months, final month</li>
+<li>40-50 curated tasks with suggested due dates (relative to wedding date)</li>
+<li>Template loads on first couple creation</li>
+<li>Deliverable: New couples get a populated checklist</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 7: Wedding Budget</h3>
+
+<p><strong>TASK-031: Budget — Data layer</strong></p>
+<ul>
+<li><code>BudgetLocalDataSource</code>, <code>BudgetRemoteDataSource</code>, <code>BudgetRepositoryImpl</code></li>
+<li>Handles both <code>budget_category</code> and <code>expense</code> tables</li>
+<li>Query: total spent per category, overall totals</li>
+<li>Deliverable: Budget data accessible offline</li>
+</ul>
+
+
+<p><strong>TASK-032: Budget — Use cases</strong></p>
+<ul>
+<li><code>GetBudgetOverviewUseCase</code> — total budget, spent, remaining, per-category</li>
+<li><code>AddBudgetCategoryUseCase</code>, <code>UpdateBudgetCategoryUseCase</code></li>
+<li><code>AddExpenseUseCase</code> (shared with finance expenses, <code>is_wedding_expense</code> flag)</li>
+<li><code>GetCategoryExpensesUseCase</code></li>
+<li>Deliverable: Budget logic encapsulated</li>
+</ul>
+
+
+<p><strong>TASK-033: Budget — UI</strong></p>
+<ul>
+<li><code>BudgetComponent</code> + <code>BudgetScreen</code> matching wireframe 12</li>
+<li>Donut chart (Compose Canvas) for total spent vs budget</li>
+<li>Category list with progress bars</li>
+<li>Over-budget warning indicator (⚠️)</li>
+<li>Add category bottom sheet</li>
+<li>Add expense bottom sheet (reused from finance)</li>
+<li>Deliverable: Budget tracking with visual charts</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 8: Guest List</h3>
+
+<p><strong>TASK-034: Guests — Data layer & use cases</strong></p>
+<ul>
+<li><code>GuestLocalDataSource</code>, <code>GuestRemoteDataSource</code>, <code>GuestRepositoryImpl</code></li>
+<li><code>GetGuestsUseCase(filter, search)</code> — Flow with stats (total, accepted, etc.)</li>
+<li><code>AddGuestUseCase</code>, <code>UpdateGuestUseCase</code>, <code>DeleteGuestUseCase</code></li>
+<li><code>ExportGuestListUseCase</code> — generate CSV string</li>
+<li><code>ImportGuestsUseCase</code> — parse CSV</li>
+<li>Deliverable: Guest CRUD + import/export</li>
+</ul>
+
+
+<p><strong>TASK-035: Guests — UI</strong></p>
+<ul>
+<li><code>GuestListComponent</code> + <code>GuestListScreen</code> matching wireframe 13</li>
+<li>Stats row (total, accepted, declined)</li>
+<li>Search bar + filter chips</li>
+<li>Guest cards with RSVP status, table, meal, plus-one badges</li>
+<li>Add/edit guest bottom sheet</li>
+<li>Export CSV button</li>
+<li>Deliverable: Full guest management UI</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 9: Vendors</h3>
+
+<p><strong>TASK-036: Vendors — Data layer & use cases</strong></p>
+<ul>
+<li><code>VendorLocalDataSource</code>, <code>VendorRemoteDataSource</code>, <code>VendorRepositoryImpl</code></li>
+<li>Handles <code>vendor</code> + <code>vendor_payment</code> tables</li>
+<li><code>GetVendorsUseCase</code>, <code>GetVendorDetailUseCase</code></li>
+<li><code>AddVendorUseCase</code>, <code>UpdateVendorUseCase</code>, <code>DeleteVendorUseCase</code></li>
+<li><code>AddVendorPaymentUseCase</code>, <code>MarkPaymentPaidUseCase</code></li>
+<li>Deliverable: Vendor + payment CRUD</li>
+</ul>
+
+
+<p><strong>TASK-037: Vendors — UI</strong></p>
+<ul>
+<li><code>VendorListComponent</code> + <code>VendorListScreen</code> matching wireframe 14</li>
+<li>Vendor cards with payment progress</li>
+<li><code>VendorDetailComponent</code> + <code>VendorDetailScreen</code> matching wireframe 15</li>
+<li>Contact info, contract upload, payment schedule, notes</li>
+<li>File upload to Supabase Storage (expect/actual for file picker)</li>
+<li>Deliverable: Full vendor management with file uploads</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 10: Wedding Timeline</h3>
+
+<p><strong>TASK-038: Timeline — Data layer & use cases</strong></p>
+<ul>
+<li><code>TimelineLocalDataSource</code>, <code>TimelineRemoteDataSource</code>, <code>TimelineRepositoryImpl</code></li>
+<li><code>GetTimelineUseCase</code> — sorted by start_time</li>
+<li><code>AddTimelineBlockUseCase</code>, <code>UpdateTimelineBlockUseCase</code>, <code>DeleteTimelineBlockUseCase</code></li>
+<li>Deliverable: Timeline CRUD</li>
+</ul>
+
+
+<p><strong>TASK-039: Timeline — UI</strong></p>
+<ul>
+<li><code>TimelineComponent</code> + <code>TimelineScreen</code> matching wireframe 16</li>
+<li>Vertical timeline with time markers</li>
+<li>Time block cards with title, location, duration, assigned people</li>
+<li>Add/edit block bottom sheet</li>
+<li>Share/export timeline button</li>
+<li>Deliverable: Wedding day schedule builder</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 11: Sync Engine</h3>
+
+<p><strong>TASK-040: Core sync — SyncQueue & SyncManager</strong></p>
+<ul>
+<li><code>sync_queue</code> SQLDelight table + queries</li>
+<li><code>SyncManager</code> class:</li>
+<li><code>enqueueSync(tableName, recordId, operation)</code> — add to queue</li>
+<li><code>processQueue()</code> — iterate pending items, push to Supabase</li>
+<li>On success: update <code>sync_status</code> to <code>SYNCED</code>, remove from queue</li>
+<li>On failure: increment <code>retry_count</code>, exponential backoff</li>
+<li>Deliverable: Queued sync mechanism works</li>
+</ul>
+
+
+<p><strong>TASK-041: Core sync — Connectivity monitor</strong></p>
+<ul>
+<li><code>ConnectivityMonitor</code> interface with <code>isOnline: StateFlow<Boolean></code></li>
+<li>expect/actual implementations:</li>
+<li>Android: <code>ConnectivityManager</code> + <code>NetworkCallback</code></li>
+<li>iOS: <code>NWPathMonitor</code></li>
+<li>Web: <code>navigator.onLine</code> + events</li>
+<li>Trigger <code>processQueue()</code> on connectivity restore</li>
+<li>Deliverable: App detects online/offline state on all platforms</li>
+</ul>
+
+
+<p><strong>TASK-042: Core sync — Supabase Realtime subscriptions</strong></p>
+<ul>
+<li>Subscribe to Supabase Realtime channels per couple</li>
+<li>Listen for INSERT, UPDATE, DELETE on all couple-scoped tables</li>
+<li>On receive: upsert into local SQLDelight, mark as SYNCED</li>
+<li>Handle subscription lifecycle (connect, reconnect, disconnect)</li>
+<li>Deliverable: Partner changes appear in real-time</li>
+</ul>
+
+
+<p><strong>TASK-043: Core sync — Conflict resolution</strong></p>
+<ul>
+<li>Detect conflicts: local PENDING + incoming remote change for same record</li>
+<li>Strategy: last-write-wins using <code>updated_at</code> timestamps</li>
+<li>For critical data (budget amounts): mark as CONFLICT, prompt user</li>
+<li>UI: conflict resolution dialog showing both versions</li>
+<li>Deliverable: Conflicts handled gracefully</li>
+</ul>
+
+
+<p><strong>TASK-044: Core sync — Periodic sync</strong></p>
+<ul>
+<li>Background periodic sync (every 5 minutes when app is active)</li>
+<li>Full sync on app foreground (pull all changes since last sync)</li>
+<li><code>last_sync_timestamp</code> stored in DataStore</li>
+<li>Deliverable: Data stays fresh even without Realtime connection</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 12: Couple Profile & Goals</h3>
+
+<p><strong>TASK-045: Profile — Data layer & use cases</strong></p>
+<ul>
+<li><code>ProfileRepositoryImpl</code> handling <code>couple</code>, <code>user_profile</code>, <code>milestone</code> tables</li>
+<li><code>GetCoupleProfileUseCase</code>, <code>UpdateCoupleProfileUseCase</code></li>
+<li><code>GetMilestonesUseCase</code>, <code>AddMilestoneUseCase</code>, <code>DeleteMilestoneUseCase</code></li>
+<li>Photo upload to Supabase Storage</li>
+<li>Deliverable: Profile & milestone CRUD</li>
+</ul>
+
+
+<p><strong>TASK-046: Profile — UI</strong></p>
+<ul>
+<li><code>ProfileComponent</code> + <code>ProfileScreen</code> matching wireframe 24</li>
+<li>Couple photo + name + status card</li>
+<li>Milestone timeline (vertical with dots and lines)</li>
+<li>Life goals summary with navigation</li>
+<li>Settings gear navigation</li>
+<li>Deliverable: Profile screen with milestones</li>
+</ul>
+
+
+<p><strong>TASK-047: Goals — Data layer, use cases & UI</strong></p>
+<ul>
+<li><code>GoalRepositoryImpl</code> handling <code>life_goal</code> + <code>goal_milestone</code> tables</li>
+<li><code>GetGoalsUseCase</code>, <code>AddGoalUseCase</code>, <code>UpdateGoalProgressUseCase</code></li>
+<li><code>GoalListComponent</code> + <code>GoalListScreen</code> matching wireframe 25</li>
+<li>Goal cards with progress bars and sub-milestone checklist</li>
+<li>Add/edit goal bottom sheet</li>
+<li>Deliverable: Life goals feature complete</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 13: Finance</h3>
+
+<p><strong>TASK-048: Finance hub — UI</strong></p>
+<ul>
+<li><code>FinanceComponent</code> + <code>FinanceScreen</code> matching wireframe 17</li>
+<li>Monthly income/expense/remaining summary card</li>
+<li>Navigation grid (Budget, Expenses, Savings)</li>
+<li>Recent expenses list</li>
+<li>FAB for quick expense entry</li>
+<li>Deliverable: Finance hub screen</li>
+</ul>
+
+
+<p><strong>TASK-049: Monthly budget — Data layer, use cases & UI</strong></p>
+<ul>
+<li><code>MonthlyBudgetRepositoryImpl</code> handling <code>monthly_budget</code> table</li>
+<li><code>GetMonthlyBudgetUseCase(yearMonth)</code>, <code>SetCategoryLimitUseCase</code></li>
+<li><code>MonthlyBudgetComponent</code> + <code>MonthlyBudgetScreen</code> matching wireframe 18</li>
+<li>Category progress bars with over-budget warnings</li>
+<li>Month navigation (< > arrows)</li>
+<li>Deliverable: Monthly budget tracking</li>
+</ul>
+
+
+<p><strong>TASK-050: Expenses — Data layer, use cases & UI</strong></p>
+<ul>
+<li>Reuses <code>expense</code> table (shared with wedding budget, <code>is_wedding_expense</code> flag)</li>
+<li><code>GetExpensesUseCase(month, category, search)</code>, <code>AddExpenseUseCase</code></li>
+<li>Expense list with filters</li>
+<li><code>AddExpenseSheet</code> matching wireframe 19</li>
+<li>Receipt photo capture + upload (expect/actual camera/gallery)</li>
+<li>Deliverable: Expense tracking with receipts</li>
+</ul>
+
+
+<p><strong>TASK-051: Savings — Data layer, use cases & UI</strong></p>
+<ul>
+<li><code>SavingsRepositoryImpl</code> handling <code>savings_goal</code> + <code>savings_contribution</code></li>
+<li><code>GetSavingsGoalsUseCase</code>, <code>AddContributionUseCase</code></li>
+<li><code>SavingsComponent</code> + <code>SavingsScreen</code> matching wireframe 20</li>
+<li>Ring chart progress (Compose Canvas)</li>
+<li>Contribution history</li>
+<li>Deliverable: Savings goals feature complete</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 14: Communication</h3>
+
+<p><strong>TASK-052: Daily check-in — Data layer, use cases & UI</strong></p>
+<ul>
+<li><code>CheckinRepositoryImpl</code> handling <code>daily_checkin</code> table</li>
+<li><code>SubmitCheckinUseCase</code>, <code>GetPartnerCheckinUseCase</code>, <code>GetWeeklyMoodsUseCase</code></li>
+<li>Check-in widget on Home (wireframe 08) + Us hub (wireframe 21)</li>
+<li>Mood emoji selector + text input</li>
+<li>Partner mood reveal (only after both submit)</li>
+<li>Weekly mood chart (grid of emojis)</li>
+<li>Deliverable: Daily check-in feature complete</li>
+</ul>
+
+
+<p><strong>TASK-053: Shared notes — Data layer, use cases & UI</strong></p>
+<ul>
+<li><code>NotesRepositoryImpl</code> handling <code>shared_note</code> table</li>
+<li><code>GetNotesUseCase</code>, <code>CreateNoteUseCase</code>, <code>UpdateNoteUseCase</code>, <code>PinNoteUseCase</code></li>
+<li><code>NotesListComponent</code> + <code>NotesListScreen</code> matching wireframe 22</li>
+<li>Note cards with pin indicator, title, preview, last updated</li>
+<li>Note detail screen with editing</li>
+<li>Deliverable: Shared notes feature complete</li>
+</ul>
+
+
+<p><strong>TASK-054: Love journal — Data layer, use cases & UI</strong></p>
+<ul>
+<li><code>JournalRepositoryImpl</code> handling <code>journal_entry</code> + <code>journal_photo</code></li>
+<li><code>GetEntriesUseCase(filter: all|shared)</code>, <code>CreateEntryUseCase</code></li>
+<li><code>GetOnThisDayUseCase</code> — entries from same date in previous years</li>
+<li><code>JournalComponent</code> + <code>JournalScreen</code> matching wireframe 23</li>
+<li>Entry cards with privacy badge, photo count</li>
+<li>New entry screen with photo picker + privacy toggle</li>
+<li>"On this day" memories section</li>
+<li>Deliverable: Journal feature complete</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 15: Settings</h3>
+
+<p><strong>TASK-055: Settings screen</strong></p>
+<ul>
+<li><code>SettingsComponent</code> + <code>SettingsScreen</code> matching wireframe 26</li>
+<li>Sections: Account, Couple Space, Preferences, Data</li>
+<li>Theme picker (light/dark/system) → DataStore</li>
+<li>Notification preferences</li>
+<li>Currency selector</li>
+<li>Sync status display</li>
+<li>Deliverable: Settings screen</li>
+</ul>
+
+
+<p><strong>TASK-056: Account management</strong></p>
+<ul>
+<li>Edit name/email screen</li>
+<li>Change password flow (Supabase)</li>
+<li>Logout with local data cleanup</li>
+<li>Deliverable: Account management works</li>
+</ul>
+
+
+<p><strong>TASK-057: Couple space management</strong></p>
+<ul>
+<li>View/share invite code</li>
+<li>Edit wedding date</li>
+<li>Leave couple space (with confirmation dialog)</li>
+<li>Delete couple space (with double confirmation, destructive)</li>
+<li>Deliverable: Couple space admin functions</li>
+</ul>
+
+
+<p><strong>TASK-058: Data export</strong></p>
+<ul>
+<li><code>ExportDataUseCase</code> — compile all couple data into JSON/CSV</li>
+<li>Platform share sheet to save/send export file</li>
+<li>Deliverable: Users can export their data</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 16: Onboarding & Empty States</h3>
+
+<p><strong>TASK-059: Onboarding flow</strong></p>
+<ul>
+<li>3-page horizontal pager matching wireframe 02</li>
+<li>Page indicators, Next/Skip, Get Started</li>
+<li>Mark onboarding complete in DataStore</li>
+<li>Skip on subsequent launches</li>
+<li>Deliverable: First-time users see onboarding</li>
+</ul>
+
+
+<p><strong>TASK-060: Empty states for all features</strong></p>
+<ul>
+<li>Generic <code>CbEmptyState</code> component (icon + message + CTA)</li>
+<li>Unique empty state per feature:</li>
+<li>Checklist: "No tasks yet — load a template?"</li>
+<li>Guests: "No guests yet — add your first guest"</li>
+<li>Budget: "Set your wedding budget to get started"</li>
+<li>Vendors: "No vendors yet"</li>
+<li>Timeline: "Build your wedding day schedule"</li>
+<li>Notes: "Create your first shared note"</li>
+<li>Journal: "Start your love journal"</li>
+<li>Savings: "Set your first savings goal"</li>
+<li>Deliverable: Every list screen has a helpful empty state</li>
+</ul>
+
+
+<hr>
+
+<h3>Epic 17: Polish & Platform Integration</h3>
+
+<p><strong>TASK-061: Push notifications</strong></p>
+<ul>
+<li>Android: FCM integration</li>
+<li>iOS: APNs integration</li>
+<li>Web: Web Push API</li>
+<li>Notification types: partner check-in, task due, payment reminder, RSVP update</li>
+<li>Notification preferences (per type toggle)</li>
+<li>Deliverable: Push notifications on all platforms</li>
+</ul>
+
+
+<p><strong>TASK-062: Performance optimization</strong></p>
+<ul>
+<li>Lazy loading for long lists (checklist, guest list, expenses)</li>
+<li>Image caching configuration (Coil)</li>
+<li>Database query optimization (indices on <code>couple_id</code>, <code>sync_status</code>)</li>
+<li>Compose performance: minimize recompositions, use <code>@Stable</code>/<code>@Immutable</code></li>
+<li>Deliverable: App feels snappy on all platforms</li>
+</ul>
+
+
+<p><strong>TASK-063: Error handling & edge cases</strong></p>
+<ul>
+<li>Global error handler for network failures</li>
+<li>Retry UI for failed syncs</li>
+<li>Graceful degradation when offline</li>
+<li>Input validation on all forms</li>
+<li>Deliverable: App handles errors gracefully</li>
+</ul>
+
+
+<p><strong>TASK-064: Testing</strong></p>
+<ul>
+<li>Unit tests: all use cases, all repositories (with mock data sources)</li>
+<li>Flow tests: reactive queries with Turbine</li>
+<li>Integration tests: sync engine (local ↔ remote)</li>
+<li>UI tests: auth flow, checklist CRUD, expense entry</li>
+<li>Deliverable: Core flows have test coverage</li>
+</ul>
+
+
+<p><strong>TASK-065: App Store preparation</strong></p>
+<ul>
+<li>Android: signing config, ProGuard rules, Play Store listing</li>
+<li>iOS: Xcode project config, App Store Connect</li>
+<li>Web: hosting setup (Vercel/Netlify), PWA manifest</li>
+<li>App icons, splash screen assets</li>
+<li>Deliverable: Ready to submit to stores</li>
+</ul>
+
+
+<hr>
+
+<h2 class="page-break">8. Conventional Commit Rules</h2>
+
+<h3>8.1 Commit Message Format</h3>
+
+<pre><code>
+&lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;
+
+
+
+[optional body]
+
+
+
+[optional footer(s)]
+
+</code></pre>
+
+
+<p><strong>Example:</strong></p>
+<pre><code>
+feat(wedding-checklist): add checklist template loader
+
+
+
+Load pre-populated wedding tasks from JSON resource file
+
+grouped by timeline category (12mo, 6mo, 3mo, 1mo, final).
+
+
+
+Refs: TASK-030
+
+Co-Authored-By: Claude Opus 4.6 &lt;noreply@anthropic.com&gt;
+
+</code></pre>
+
+
+<h3>8.2 Types</h3>
+
+<table>
+<thead><tr><th>Type</th><th>When to use</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>feat</code></td><td>New feature or capability</td><td><code>feat(auth): add Google sign-in</code></td></tr>
+<tr><td><code>fix</code></td><td>Bug fix</td><td><code>fix(sync): resolve duplicate entries on reconnect</code></td></tr>
+<tr><td><code>refactor</code></td><td>Code change that neither fixes nor adds</td><td><code>refactor(database): extract base DAO interface</code></td></tr>
+<tr><td><code>chore</code></td><td>Build, config, tooling, dependencies</td><td><code>chore(build): add KmpFeature convention plugin</code></td></tr>
+<tr><td><code>style</code></td><td>UI/visual changes only (no logic change)</td><td><code>style(ui): update rose accent to #C2185B</code></td></tr>
+<tr><td><code>docs</code></td><td>Documentation only</td><td><code>docs: add API key setup instructions</code></td></tr>
+<tr><td><code>test</code></td><td>Adding or fixing tests</td><td><code>test(checklist): add repository unit tests</code></td></tr>
+<tr><td><code>perf</code></td><td>Performance improvement</td><td><code>perf(guests): add index on couple_id column</code></td></tr>
+<tr><td><code>ci</code></td><td>CI/CD pipeline changes</td><td><code>ci: add iOS simulator build step</code></td></tr>
+<tr><td><code>init</code></td><td>Initial project/module setup</td><td><code>init: scaffold KMP project with Compose Multiplatform</code></td></tr>
+</tbody></table>
+
+
+<h3>8.3 Scopes</h3>
+
+<p>Scopes map to our module names:</p>
+
+<p><strong>Core modules:</strong></p>
+<table>
+<thead><tr><th>Scope</th><th>Module</th></tr></thead>
+<tbody>
+<tr><td><code>common</code></td><td><code>:core:common</code></td></tr>
+<tr><td><code>model</code></td><td><code>:core:model</code></td></tr>
+<tr><td><code>database</code></td><td><code>:core:database</code></td></tr>
+<tr><td><code>network</code></td><td><code>:core:network</code></td></tr>
+<tr><td><code>sync</code></td><td><code>:core:sync</code></td></tr>
+<tr><td><code>domain</code></td><td><code>:core:domain</code></td></tr>
+<tr><td><code>datastore</code></td><td><code>:core:datastore</code></td></tr>
+<tr><td><code>ui</code></td><td><code>:core:ui</code></td></tr>
+</tbody></table>
+
+
+<p><strong>Feature modules:</strong></p>
+<table>
+<thead><tr><th>Scope</th><th>Module</th></tr></thead>
+<tbody>
+<tr><td><code>auth</code></td><td><code>:feature:auth</code></td></tr>
+<tr><td><code>wedding-checklist</code></td><td><code>:feature:wedding-checklist</code></td></tr>
+<tr><td><code>wedding-budget</code></td><td><code>:feature:wedding-budget</code></td></tr>
+<tr><td><code>wedding-guests</code></td><td><code>:feature:wedding-guests</code></td></tr>
+<tr><td><code>wedding-vendors</code></td><td><code>:feature:wedding-vendors</code></td></tr>
+<tr><td><code>wedding-timeline</code></td><td><code>:feature:wedding-timeline</code></td></tr>
+<tr><td><code>couple-profile</code></td><td><code>:feature:couple-profile</code></td></tr>
+<tr><td><code>couple-goals</code></td><td><code>:feature:couple-goals</code></td></tr>
+<tr><td><code>finance-budget</code></td><td><code>:feature:finance-budget</code></td></tr>
+<tr><td><code>finance-expenses</code></td><td><code>:feature:finance-expenses</code></td></tr>
+<tr><td><code>finance-savings</code></td><td><code>:feature:finance-savings</code></td></tr>
+<tr><td><code>comm-notes</code></td><td><code>:feature:comm-notes</code></td></tr>
+<tr><td><code>comm-journal</code></td><td><code>:feature:comm-journal</code></td></tr>
+<tr><td><code>comm-checkin</code></td><td><code>:feature:comm-checkin</code></td></tr>
+<tr><td><code>settings</code></td><td><code>:feature:settings</code></td></tr>
+</tbody></table>
+
+
+<p><strong>Cross-cutting scopes:</strong></p>
+<table>
+<thead><tr><th>Scope</th><th>When</th></tr></thead>
+<tbody>
+<tr><td><code>build</code></td><td>Gradle, convention plugins, version catalog</td></tr>
+<tr><td><code>app</code></td><td><code>composeApp</code> module (root nav, entry points)</td></tr>
+<tr><td><code>deps</code></td><td>Dependency updates only</td></tr>
+<tr><td><code>nav</code></td><td>Navigation/routing changes</td></tr>
+<tr><td><em>(omit scope)</em></td><td>Truly project-wide changes</td></tr>
+</tbody></table>
+
+
+<h3>8.4 Rules</h3>
+
+<ul>
+<li><strong>Subject line</strong>: imperative mood, lowercase, no period, max 72 chars</li>
+<li>Good: <code>feat(auth): add email validation on signup form</code></li>
+<li>Bad: <code>feat(auth): Added email validation on signup form.</code></li>
+</ul>
+
+
+<ul>
+<li><strong>Body</strong> (optional): explain <em>what</em> and <em>why</em>, not <em>how</em>. Wrap at 80 chars.</li>
+</ul>
+
+
+<ul>
+<li><strong>Footer</strong>:</li>
+<li>Reference task: <code>Refs: TASK-029</code></li>
+<li>Breaking change: <code>BREAKING CHANGE: renamed CoupleId to CoupleSpaceId</code></li>
+<li>Co-author: <code>Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com></code></li>
+</ul>
+
+
+<ul>
+<li><strong>One logical change per commit</strong> — don't mix unrelated changes.</li>
+</ul>
+
+
+<ul>
+<li><strong>Scope is required</strong> for <code>feat</code>, <code>fix</code>, <code>refactor</code>, <code>style</code>, <code>test</code>, <code>perf</code>.</li>
+</ul>
+<p>   Scope is optional for <code>chore</code>, <code>docs</code>, <code>ci</code>, <code>init</code>.</p>
+
+<ul>
+<li><strong>Breaking changes</strong> must include <code>BREAKING CHANGE:</code> in footer and <code>!</code> after scope:</li>
+<pre><code>
+   refactor(model)!: rename Expense.paid_by to Expense.paidByUserId
+
+
+
+   BREAKING CHANGE: Expense.paid_by field renamed for clarity.
+
+   All existing references must be updated.
+
+</code></pre>
+
+</ul>
+
+
+<h3>8.5 Commit Strategy per Task</h3>
+
+<p>Each task from Section 7 should produce commits following this pattern:</p>
+
+<table>
+<thead><tr><th>Task Phase</th><th>Commit Pattern</th></tr></thead>
+<tbody>
+<tr><td>Module scaffold</td><td><code>init(<scope>): scaffold <module> module structure</code></td></tr>
+<tr><td>Data layer (models, DB, network)</td><td><code>feat(<scope>): add <entity> data layer</code></td></tr>
+<tr><td>Use cases</td><td><code>feat(<scope>): add <action> use case</code></td></tr>
+<tr><td>UI screen</td><td><code>feat(<scope>): implement <screen> screen</code></td></tr>
+<tr><td>UI refinement</td><td><code>style(<scope>): polish <screen> layout and spacing</code></td></tr>
+<tr><td>Tests</td><td><code>test(<scope>): add <layer> tests for <feature></code></td></tr>
+<tr><td>Bug found during dev</td><td><code>fix(<scope>): <describe the fix></code></td></tr>
+</tbody></table>
+
+
+<p><strong>Example commit sequence for TASK-027 to TASK-030 (Wedding Checklist):</strong></p>
+<pre><code>
+init(wedding-checklist): scaffold feature module structure
+
+feat(wedding-checklist): add checklist data layer with offline-first repo
+
+feat(wedding-checklist): add checklist use cases
+
+feat(wedding-checklist): implement checklist screen with filter chips
+
+feat(wedding-checklist): add add/edit checklist item bottom sheet
+
+feat(wedding-checklist): add checklist template loader
+
+test(wedding-checklist): add repository and use case unit tests
+
+</code></pre>
+
+
+<h3>8.6 Branch Naming</h3>
+
+<pre><code>
+&lt;type&gt;/&lt;scope&gt;/&lt;short-description&gt;
+
+</code></pre>
+
+
+<table>
+<thead><tr><th>Branch</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Feature</td><td><code>feat/auth/social-login</code></td></tr>
+<tr><td>Fix</td><td><code>fix/sync/duplicate-entries</code></td></tr>
+<tr><td>Chore</td><td><code>chore/build/convention-plugins</code></td></tr>
+<tr><td>Epic branch</td><td><code>epic/wedding-checklist</code></td></tr>
+</tbody></table>
+
+
+<p><strong>Flow:</strong></p>
+<ul>
+<li><code>main</code> — stable, deployable</li>
+<li><code>develop</code> — integration branch</li>
+<li><code>feat/<em></code>, <code>fix/</em></code>, <code>chore/*</code> — short-lived branches off <code>develop</code></li>
+<li>PRs merge into <code>develop</code>, release cuts merge <code>develop</code> → <code>main</code></li>
+</ul>
+
+
+<h3>8.7 Pull Request Workflow</h3>
+
+<p><strong>A PR is created after every completed task (or group of closely related tasks).</strong></p>
+
+<h4>PR Title Format</h4>
+<pre><code>
+&lt;type&gt;(&lt;scope&gt;): &lt;short description&gt;
+
+</code></pre>
+
+<p>Same convention as commits. The PR title matches the primary commit type.</p>
+
+<h4>PR Body Template</h4>
+<pre><code class="language-markdown">
+## Summary
+
+- Bullet points describing what was done and why
+
+
+
+## Task Reference
+
+- TASK-XXX: &lt;task title&gt;
+
+
+
+## Changes
+
+- List of key files/modules added or modified
+
+
+
+## Screenshots / Recordings
+
+(if UI changes — attach screen captures)
+
+
+
+## Test Plan
+
+- [ ] How to verify this PR works
+
+- [ ] Edge cases tested
+
+- [ ] Platforms verified (Android / iOS / Web)
+
+
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+</code></pre>
+
+
+<h4>PR Rules</h4>
+
+<ul>
+<li><strong>One PR per task</strong> (or per tightly coupled task group, e.g. TASK-027 + TASK-028 + TASK-029 for the full checklist feature)</li>
+<li><strong>PR branch</strong> follows branch naming convention: <code>feat/wedding-checklist/data-and-ui</code></li>
+<li><strong>Target branch</strong>: <code>develop</code></li>
+<li><strong>PR must build</strong> — <code>./gradlew build</code> passes before creating PR</li>
+<li><strong>Self-review diff</strong> before submitting — no leftover debug code, TODOs, or commented-out blocks</li>
+<li><strong>Labels</strong> (applied via <code>gh pr create --label</code>):</li>
+</ul>
+
+
+<table>
+<thead><tr><th>Label</th><th>When</th></tr></thead>
+<tbody>
+<tr><td><code>feature</code></td><td>New feature PRs</td></tr>
+<tr><td><code>fix</code></td><td>Bug fix PRs</td></tr>
+<tr><td><code>infra</code></td><td>Build, CI, tooling PRs</td></tr>
+<tr><td><code>core</code></td><td>Core module changes</td></tr>
+<tr><td><code>wedding</code></td><td>Wedding feature modules</td></tr>
+<tr><td><code>finance</code></td><td>Finance feature modules</td></tr>
+<tr><td><code>communication</code></td><td>Communication feature modules</td></tr>
+</tbody></table>
+
+
+<h4>PR Sequence (maps to Epics)</h4>
+
+<table>
+<thead><tr><th>PR#</th><th>Branch</th><th>Tasks</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>PR-00</td><td><code>main</code> (direct)</td><td>TASK-000</td><td>Git init, .gitignore, README, remote origin, develop branch</td></tr>
+<tr><td>PR-01</td><td><code>chore/build/project-scaffold</code></td><td>TASK-001 to TASK-004</td><td>Project init, convention plugins, module dirs, platform entry points</td></tr>
+<tr><td>PR-02</td><td><code>feat/core/common-and-model</code></td><td>TASK-005, TASK-006</td><td>Core utilities and domain models</td></tr>
+<tr><td>PR-03</td><td><code>feat/core/database</code></td><td>TASK-007, TASK-008</td><td>SQLDelight schema, queries, platform drivers</td></tr>
+<tr><td>PR-04</td><td><code>feat/core/network-and-datastore</code></td><td>TASK-009, TASK-010</td><td>Supabase client, preferences</td></tr>
+<tr><td>PR-05</td><td><code>feat/core/domain</code></td><td>TASK-011</td><td>Base use cases</td></tr>
+<tr><td>PR-06</td><td><code>feat/core/ui-design-system</code></td><td>TASK-012, TASK-013</td><td>Theme, colors, typography, shared components</td></tr>
+<tr><td>PR-07</td><td><code>feat/app/navigation-shell</code></td><td>TASK-014, TASK-015, TASK-016</td><td>Root nav, bottom tabs, deep links</td></tr>
+<tr><td>PR-08</td><td><code>feat/auth/login-and-signup</code></td><td>TASK-017, TASK-018, TASK-019</td><td>Login, signup, social auth</td></tr>
+<tr><td>PR-09</td><td><code>feat/auth/couple-pairing</code></td><td>TASK-020, TASK-021, TASK-022</td><td>Create/join couple space, QR, invite</td></tr>
+<tr><td>PR-10</td><td><code>feat/auth/session-and-rls</code></td><td>TASK-023, TASK-024</td><td>Session management, RLS policies</td></tr>
+<tr><td>PR-11</td><td><code>feat/app/home-dashboard</code></td><td>TASK-025, TASK-026</td><td>Home dashboard, notifications</td></tr>
+<tr><td>PR-12</td><td><code>feat/wedding-checklist/full</code></td><td>TASK-027 to TASK-030</td><td>Checklist data + use cases + UI + templates</td></tr>
+<tr><td>PR-13</td><td><code>feat/wedding-budget/full</code></td><td>TASK-031 to TASK-033</td><td>Budget data + use cases + UI + charts</td></tr>
+<tr><td>PR-14</td><td><code>feat/wedding-guests/full</code></td><td>TASK-034, TASK-035</td><td>Guest list data + UI</td></tr>
+<tr><td>PR-15</td><td><code>feat/wedding-vendors/full</code></td><td>TASK-036, TASK-037</td><td>Vendors data + UI + file upload</td></tr>
+<tr><td>PR-16</td><td><code>feat/wedding-timeline/full</code></td><td>TASK-038, TASK-039</td><td>Timeline data + UI</td></tr>
+<tr><td>PR-17</td><td><code>feat/core/sync-engine</code></td><td>TASK-040 to TASK-044</td><td>Sync queue, connectivity, realtime, conflicts</td></tr>
+<tr><td>PR-18</td><td><code>feat/couple-profile/full</code></td><td>TASK-045, TASK-046</td><td>Profile + milestones</td></tr>
+<tr><td>PR-19</td><td><code>feat/couple-goals/full</code></td><td>TASK-047</td><td>Life goals</td></tr>
+<tr><td>PR-20</td><td><code>feat/finance/hub-and-budget</code></td><td>TASK-048, TASK-049</td><td>Finance hub + monthly budget</td></tr>
+<tr><td>PR-21</td><td><code>feat/finance/expenses-and-savings</code></td><td>TASK-050, TASK-051</td><td>Expenses + savings goals</td></tr>
+<tr><td>PR-22</td><td><code>feat/comm/checkin</code></td><td>TASK-052</td><td>Daily check-in</td></tr>
+<tr><td>PR-23</td><td><code>feat/comm/notes-and-journal</code></td><td>TASK-053, TASK-054</td><td>Shared notes + love journal</td></tr>
+<tr><td>PR-24</td><td><code>feat/settings/full</code></td><td>TASK-055 to TASK-058</td><td>Settings, account, couple mgmt, export</td></tr>
+<tr><td>PR-25</td><td><code>feat/app/onboarding</code></td><td>TASK-059, TASK-060</td><td>Onboarding flow + empty states</td></tr>
+<tr><td>PR-26</td><td><code>feat/app/notifications-push</code></td><td>TASK-061</td><td>Push notifications</td></tr>
+<tr><td>PR-27</td><td><code>chore/app/polish</code></td><td>TASK-062 to TASK-065</td><td>Performance, error handling, tests, store prep</td></tr>
+</tbody></table>
+
+
+<hr>
+
+<h2 class="page-break">9. Verification Plan</h2>
+
+<table>
+<thead><tr><th>What</th><th>How</th></tr></thead>
+<tbody>
+<tr><td><strong>Build</strong></td><td><code>./gradlew build</code> — all modules, all targets</td></tr>
+<tr><td><strong>Android</strong></td><td>Run on emulator/device via Android Studio</td></tr>
+<tr><td><strong>iOS</strong></td><td>Run on simulator via Xcode</td></tr>
+<tr><td><strong>Web</strong></td><td><code>./gradlew wasmJsBrowserRun</code> in Chrome</td></tr>
+<tr><td><strong>Offline</strong></td><td>Airplane mode → create data → reconnect → verify sync</td></tr>
+<tr><td><strong>Partner sync</strong></td><td>2 devices, same couple → verify real-time changes</td></tr>
+<tr><td><strong>Auth</strong></td><td>Sign up → pair → login on another device → see shared data</td></tr>
+<tr><td><strong>Unit tests</strong></td><td><code>./gradlew allTests</code></td></tr>
+<tr><td><strong>Edge cases</strong></td><td>Slow network, large guest lists (500+), concurrent edits</td></tr>
+</tbody></table>
+
+
+<footer style="margin-top: 48px; padding-top: 16px; border-top: 1px solid #e0e0e0; color: #999; font-size: 12px; text-align: center;">
+Couplebase PRD v1.0 — Generated March 10, 2026
+</footer>
+</body>
+</html>

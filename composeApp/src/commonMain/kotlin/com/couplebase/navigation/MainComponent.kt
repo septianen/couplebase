@@ -6,9 +6,12 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
+import com.couplebase.core.datastore.PreferencesDataStore
+import com.couplebase.core.domain.repository.AuthRepository
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
 import com.couplebase.core.domain.repository.CommunicationRepository
+import com.couplebase.core.domain.repository.CoupleRepository
 import com.couplebase.core.domain.repository.FinanceRepository
 import com.couplebase.core.domain.repository.GuestRepository
 import com.couplebase.core.domain.repository.LifeGoalRepository
@@ -33,6 +36,9 @@ class MainComponent(
     private val lifeGoalRepository: LifeGoalRepository,
     private val financeRepository: FinanceRepository,
     private val communicationRepository: CommunicationRepository,
+    private val preferencesDataStore: PreferencesDataStore,
+    private val authRepository: AuthRepository,
+    private val coupleRepository: CoupleRepository,
     private val coupleId: String = "stub-couple-id",
     val onLogout: () -> Unit,
 ) : ComponentContext by componentContext {
@@ -82,6 +88,10 @@ class MainComponent(
                     coupleId = coupleId,
                     milestoneRepository = milestoneRepository,
                     lifeGoalRepository = lifeGoalRepository,
+                    preferencesDataStore = preferencesDataStore,
+                    authRepository = authRepository,
+                    coupleRepository = coupleRepository,
+                    onLogout = onLogout,
                 )
             )
         }

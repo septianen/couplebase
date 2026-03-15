@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.couplebase.core.datastore.PreferencesDataStore
 import com.couplebase.core.domain.repository.AuthRepository
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
@@ -39,6 +40,7 @@ class RootComponent(
     private val lifeGoalRepository: LifeGoalRepository,
     private val financeRepository: FinanceRepository,
     private val communicationRepository: CommunicationRepository,
+    private val preferencesDataStore: PreferencesDataStore,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -80,6 +82,9 @@ class RootComponent(
                     lifeGoalRepository = lifeGoalRepository,
                     financeRepository = financeRepository,
                     communicationRepository = communicationRepository,
+                    preferencesDataStore = preferencesDataStore,
+                    authRepository = authRepository,
+                    coupleRepository = coupleRepository,
                     onLogout = ::onLogout,
                 )
             )

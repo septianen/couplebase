@@ -35,6 +35,7 @@ fun MainViewController() = ComposeUIViewController {
         lifeGoalRepository = StubLifeGoalRepository(),
         financeRepository = StubFinanceRepository(),
         communicationRepository = StubCommunicationRepository(),
+        preferencesDataStore = preferencesDataStore,
     )
     RootContent(rootComponent)
 }

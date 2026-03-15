@@ -25,6 +25,7 @@ class ProfileComponent(
     private val milestoneRepository: MilestoneRepository,
     private val lifeGoalRepository: LifeGoalRepository,
     val onNavigateToGoals: () -> Unit = {},
+    val onNavigateToSettings: () -> Unit = {},
 ) : ComponentContext by componentContext {
 
     private val handler = instanceKeeper.getOrCreate {

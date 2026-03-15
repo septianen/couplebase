@@ -57,12 +57,28 @@ fun ProfileScreen(component: ProfileComponent) {
         color = MaterialTheme.colorScheme.background,
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
+            // Settings button
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 12.dp, end = 12.dp),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    Text(
+                        text = "\u2699\uFE0F",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .clickable { component.onNavigateToSettings() }
+                            .padding(8.dp),
+                    )
+                }
+            }
+
             // Header
             item {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(24.dp),
+                        .padding(horizontal = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     // Couple avatar placeholder
