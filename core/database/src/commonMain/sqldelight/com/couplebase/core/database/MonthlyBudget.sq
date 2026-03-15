@@ -1,0 +1,38 @@
+CREATE TABLE monthly_budget (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  year_month TEXT NOT NULL,
+  category TEXT NOT NULL,
+  limit_amount REAL NOT NULL,
+  income_amount REAL NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'PENDING',
+  is_deleted INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idx_monthly_budget_couple ON monthly_budget(couple_id);
+
+getByCoupleIdAndMonth:
+SELECT * FROM monthly_budget WHERE couple_id = ? AND year_month = ? AND is_deleted = 0 ORDER BY category;
+
+getById:
+SELECT * FROM monthly_budget WHERE id = ?;
+
+insert:
+INSERT OR REPLACE INTO monthly_budget(id, couple_id, year_month, category, limit_amount, income_amount, updated_at, sync_status, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateSyncStatus:
+UPDATE monthly_budget SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+softDelete:
+UPDATE monthly_budget SET is_deleted = 1, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM monthly_budget WHERE sync_status = ?;
+
+getTotalIncome:
+SELECT COALESCE(SUM(income_amount), 0) AS total FROM monthly_budget WHERE couple_id = ? AND year_month = ? AND is_deleted = 0;
+
+getTotalLimit:
+SELECT COALESCE(SUM(limit_amount), 0) AS total FROM monthly_budget WHERE couple_id = ? AND year_month = ? AND is_deleted = 0;

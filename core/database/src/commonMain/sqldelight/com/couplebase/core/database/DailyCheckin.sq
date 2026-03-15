@@ -1,0 +1,35 @@
+CREATE TABLE daily_checkin (
+  id TEXT NOT NULL PRIMARY KEY,
+  couple_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  date TEXT NOT NULL,
+  mood TEXT NOT NULL,
+  reflection TEXT,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'PENDING'
+);
+
+CREATE INDEX idx_daily_checkin_couple ON daily_checkin(couple_id);
+CREATE UNIQUE INDEX idx_daily_checkin_unique ON daily_checkin(couple_id, user_id, date);
+
+getByUserAndDate:
+SELECT * FROM daily_checkin WHERE couple_id = ? AND user_id = ? AND date = ?;
+
+getPartnerCheckin:
+SELECT * FROM daily_checkin WHERE couple_id = ? AND user_id != ? AND date = ?;
+
+getWeeklyMoods:
+SELECT * FROM daily_checkin WHERE couple_id = ? AND date >= ? AND date <= ? ORDER BY date, user_id;
+
+getById:
+SELECT * FROM daily_checkin WHERE id = ?;
+
+insert:
+INSERT OR REPLACE INTO daily_checkin(id, couple_id, user_id, date, mood, reflection, updated_at, sync_status)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+updateSyncStatus:
+UPDATE daily_checkin SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM daily_checkin WHERE sync_status = ?;

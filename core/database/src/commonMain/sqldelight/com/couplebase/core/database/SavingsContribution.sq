@@ -1,0 +1,35 @@
+CREATE TABLE savings_contribution (
+  id TEXT NOT NULL PRIMARY KEY,
+  goal_id TEXT NOT NULL,
+  couple_id TEXT NOT NULL,
+  amount REAL NOT NULL,
+  date TEXT NOT NULL,
+  note TEXT,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'PENDING',
+  is_deleted INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idx_savings_contribution_goal ON savings_contribution(goal_id);
+
+getByGoalId:
+SELECT * FROM savings_contribution WHERE goal_id = ? AND is_deleted = 0 ORDER BY date DESC;
+
+getById:
+SELECT * FROM savings_contribution WHERE id = ?;
+
+insert:
+INSERT OR REPLACE INTO savings_contribution(id, goal_id, couple_id, amount, date, note, updated_at, sync_status, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateSyncStatus:
+UPDATE savings_contribution SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+softDelete:
+UPDATE savings_contribution SET is_deleted = 1, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM savings_contribution WHERE sync_status = ?;
+
+getTotalByGoalId:
+SELECT COALESCE(SUM(amount), 0) AS total FROM savings_contribution WHERE goal_id = ? AND is_deleted = 0;

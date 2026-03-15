@@ -1,0 +1,41 @@
+CREATE TABLE goal_milestone (
+  id TEXT NOT NULL PRIMARY KEY,
+  goal_id TEXT NOT NULL,
+  couple_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  is_completed INTEGER NOT NULL DEFAULT 0,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL,
+  sync_status TEXT NOT NULL DEFAULT 'PENDING',
+  is_deleted INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idx_goal_milestone_goal ON goal_milestone(goal_id);
+
+getByGoalId:
+SELECT * FROM goal_milestone WHERE goal_id = ? AND is_deleted = 0 ORDER BY sort_order;
+
+getById:
+SELECT * FROM goal_milestone WHERE id = ?;
+
+insert:
+INSERT OR REPLACE INTO goal_milestone(id, goal_id, couple_id, title, is_completed, sort_order, updated_at, sync_status, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+toggleCompleted:
+UPDATE goal_milestone SET is_completed = ?, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+updateSyncStatus:
+UPDATE goal_milestone SET sync_status = ?, updated_at = ? WHERE id = ?;
+
+softDelete:
+UPDATE goal_milestone SET is_deleted = 1, updated_at = ?, sync_status = 'PENDING' WHERE id = ?;
+
+getBySyncStatus:
+SELECT * FROM goal_milestone WHERE sync_status = ?;
+
+countByGoalId:
+SELECT COUNT(*) FROM goal_milestone WHERE goal_id = ? AND is_deleted = 0;
+
+countCompletedByGoalId:
+SELECT COUNT(*) FROM goal_milestone WHERE goal_id = ? AND is_completed = 1 AND is_deleted = 0;
