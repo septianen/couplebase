@@ -9,7 +9,12 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.couplebase.core.domain.repository.AuthRepository
+import com.couplebase.core.domain.repository.BudgetRepository
+import com.couplebase.core.domain.repository.ChecklistRepository
 import com.couplebase.core.domain.repository.CoupleRepository
+import com.couplebase.core.domain.repository.GuestRepository
+import com.couplebase.core.domain.repository.TimelineRepository
+import com.couplebase.core.domain.repository.VendorRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -21,6 +26,11 @@ class RootComponent(
     componentContext: ComponentContext,
     private val authRepository: AuthRepository,
     private val coupleRepository: CoupleRepository,
+    private val checklistRepository: ChecklistRepository,
+    private val budgetRepository: BudgetRepository,
+    private val guestRepository: GuestRepository,
+    private val vendorRepository: VendorRepository,
+    private val timelineRepository: TimelineRepository,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -53,6 +63,11 @@ class RootComponent(
             Config.Main -> Child.Main(
                 MainComponent(
                     componentContext = componentContext,
+                    checklistRepository = checklistRepository,
+                    budgetRepository = budgetRepository,
+                    guestRepository = guestRepository,
+                    vendorRepository = vendorRepository,
+                    timelineRepository = timelineRepository,
                     onLogout = ::onLogout,
                 )
             )

@@ -62,6 +62,11 @@ kotlin {
             implementation(projects.core.datastore)
             implementation(projects.core.ui)
             implementation(projects.feature.auth)
+            implementation(projects.feature.weddingChecklist)
+            implementation(projects.feature.weddingBudget)
+            implementation(projects.feature.weddingGuests)
+            implementation(projects.feature.weddingVendors)
+            implementation(projects.feature.weddingTimeline)
         }
 
         androidMain.dependencies {
