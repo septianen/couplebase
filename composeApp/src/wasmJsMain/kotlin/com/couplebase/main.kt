@@ -20,10 +20,15 @@ import com.couplebase.di.StubVendorRepository
 import com.couplebase.navigation.RootComponent
 import com.couplebase.navigation.RootContent
 
+private fun jsGetHash(): JsString? = js("window.location.hash")
+
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     val lifecycle = LifecycleRegistry()
     val preferencesDataStore = PreferencesDataStoreImpl(PlatformStorage())
+    // Read URL hash for deep link routing (e.g. #/join/abc123)
+    val hash = jsGetHash()?.toString()?.removePrefix("#")
+    val deepLinkUri = if (!hash.isNullOrBlank()) "couplebase://$hash" else null
     val rootComponent = RootComponent(
         componentContext = DefaultComponentContext(lifecycle = lifecycle),
         authRepository = StubAuthRepository(preferencesDataStore),
@@ -38,6 +43,7 @@ fun main() {
         financeRepository = StubFinanceRepository(),
         communicationRepository = StubCommunicationRepository(),
         preferencesDataStore = preferencesDataStore,
+        deepLinkUri = deepLinkUri,
     )
 
     CanvasBasedWindow(canvasElementId = "ComposeTarget", title = "Couplebase") {

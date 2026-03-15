@@ -101,6 +101,19 @@ class MainComponent(
         navigation.bringToFront(tab)
     }
 
+    fun handleDeepLink(deepLink: DeepLink) {
+        when (deepLink) {
+            is DeepLink.NavigateTab -> navigation.bringToFront(deepLink.tab)
+            is DeepLink.Settings -> {
+                navigation.bringToFront(Tab.Me)
+                // Settings navigation is handled within MeTabComponent
+            }
+            is DeepLink.JoinCouple -> {
+                // Join flow is handled during auth — if already in main, ignore
+            }
+        }
+    }
+
     @Serializable
     sealed interface Tab {
         @Serializable

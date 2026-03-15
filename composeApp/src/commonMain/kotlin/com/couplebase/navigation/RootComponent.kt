@@ -41,7 +41,10 @@ class RootComponent(
     private val financeRepository: FinanceRepository,
     private val communicationRepository: CommunicationRepository,
     private val preferencesDataStore: PreferencesDataStore,
+    deepLinkUri: String? = null,
 ) : ComponentContext by componentContext {
+
+    private val pendingDeepLink: DeepLink? = deepLinkUri?.let { DeepLink.parse(it) }
 
     private val navigation = StackNavigation<Config>()
     private val handler = instanceKeeper.getOrCreate {
@@ -65,10 +68,13 @@ class RootComponent(
                     navigation.replaceAll(Config.Onboarding)
                 }
             } else {
+                // For join deep links, still go to auth first — the code is handled after login
                 navigation.replaceAll(Config.Auth)
             }
         }
     }
+
+    private var mainComponent: MainComponent? = null
 
     private fun createChild(config: Config, componentContext: ComponentContext): Child {
         return when (config) {
@@ -77,8 +83,8 @@ class RootComponent(
                 AuthComponent(componentContext, authRepository, coupleRepository, ::onAuthComplete)
             )
             Config.Onboarding -> Child.Onboarding
-            Config.Main -> Child.Main(
-                MainComponent(
+            Config.Main -> {
+                val component = MainComponent(
                     componentContext = componentContext,
                     checklistRepository = checklistRepository,
                     budgetRepository = budgetRepository,
@@ -94,8 +100,19 @@ class RootComponent(
                     coupleRepository = coupleRepository,
                     onLogout = ::onLogout,
                 )
-            )
+                mainComponent = component
+                pendingDeepLink?.let { component.handleDeepLink(it) }
+                Child.Main(component)
+            }
         }
+    }
+
+    /**
+     * Handle a deep link received while the app is already running (e.g. new intent on Android).
+     */
+    fun onDeepLink(uri: String) {
+        val deepLink = DeepLink.parse(uri) ?: return
+        mainComponent?.handleDeepLink(deepLink)
     }
 
     private fun onAuthComplete() {
