@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
+import com.couplebase.home.HomeTabComponent
 import kotlinx.serialization.Serializable
 
 class MainComponent(
@@ -25,7 +26,7 @@ class MainComponent(
 
     private fun createChild(tab: Tab, componentContext: ComponentContext): TabChild {
         return when (tab) {
-            Tab.Home -> TabChild.Home(componentContext)
+            Tab.Home -> TabChild.Home(HomeTabComponent(componentContext))
             Tab.Wedding -> TabChild.Wedding(componentContext)
             Tab.Finance -> TabChild.Finance(componentContext)
             Tab.Us -> TabChild.Us(componentContext)
@@ -56,12 +57,10 @@ class MainComponent(
     }
 
     sealed interface TabChild {
-        val componentContext: ComponentContext
-
-        data class Home(override val componentContext: ComponentContext) : TabChild
-        data class Wedding(override val componentContext: ComponentContext) : TabChild
-        data class Finance(override val componentContext: ComponentContext) : TabChild
-        data class Us(override val componentContext: ComponentContext) : TabChild
-        data class Me(override val componentContext: ComponentContext) : TabChild
+        data class Home(val component: HomeTabComponent) : TabChild
+        data class Wedding(val componentContext: ComponentContext) : TabChild
+        data class Finance(val componentContext: ComponentContext) : TabChild
+        data class Us(val componentContext: ComponentContext) : TabChild
+        data class Me(val componentContext: ComponentContext) : TabChild
     }
 }

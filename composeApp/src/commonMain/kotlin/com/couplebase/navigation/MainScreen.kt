@@ -18,6 +18,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.couplebase.home.HomeTabScreen
 
 @Composable
 fun MainScreen(component: MainComponent) {
@@ -49,7 +50,7 @@ fun MainScreen(component: MainComponent) {
             animation = stackAnimation(fade()),
         ) { child ->
             when (val instance = child.instance) {
-                is MainComponent.TabChild.Home -> TabPlaceholder("Home")
+                is MainComponent.TabChild.Home -> HomeTabScreen(instance.component)
                 is MainComponent.TabChild.Wedding -> TabPlaceholder("Wedding")
                 is MainComponent.TabChild.Finance -> TabPlaceholder("Finance")
                 is MainComponent.TabChild.Us -> TabPlaceholder("Us")
