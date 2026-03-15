@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -173,20 +172,6 @@ private fun FinanceHubCard(
     }
 }
 
-@Composable
-fun PlaceholderScreen(title: String) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-}
-
 private data class FinanceHubItem(
     val id: String,
     val icon: String,
@@ -197,6 +182,6 @@ private data class FinanceHubItem(
 
 private val financeHubItems = listOf(
     FinanceHubItem("budget", "\uD83D\uDCCA", "Budget", "Monthly limits"),
-    FinanceHubItem("expenses", "\uD83D\uDCB3", "Expenses", "Track spending", enabled = false),
-    FinanceHubItem("savings", "\uD83C\uDFAF", "Savings", "Goal tracking", enabled = false),
+    FinanceHubItem("expenses", "\uD83D\uDCB3", "Expenses", "Track spending"),
+    FinanceHubItem("savings", "\uD83C\uDFAF", "Savings", "Goal tracking"),
 )

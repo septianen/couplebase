@@ -70,6 +70,8 @@ kotlin {
             implementation(projects.feature.coupleProfile)
             implementation(projects.feature.coupleGoals)
             implementation(projects.feature.financeBudget)
+            implementation(projects.feature.financeExpenses)
+            implementation(projects.feature.financeSavings)
         }
 
         androidMain.dependencies {
