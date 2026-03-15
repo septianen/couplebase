@@ -1,5 +1,6 @@
 package com.couplebase
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,13 +23,16 @@ import com.couplebase.navigation.RootComponent
 import com.couplebase.navigation.RootContent
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var rootComponent: RootComponent
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         val preferencesDataStore = PreferencesDataStoreImpl(PlatformStorage(this))
 
-        val rootComponent = RootComponent(
+        rootComponent = RootComponent(
             componentContext = defaultComponentContext(),
             authRepository = StubAuthRepository(preferencesDataStore),
             coupleRepository = StubCoupleRepository(),
@@ -42,10 +46,16 @@ class MainActivity : ComponentActivity() {
             financeRepository = StubFinanceRepository(),
             communicationRepository = StubCommunicationRepository(),
             preferencesDataStore = preferencesDataStore,
+            deepLinkUri = intent?.data?.toString(),
         )
 
         setContent {
             RootContent(rootComponent)
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        intent.data?.toString()?.let { rootComponent.onDeepLink(it) }
     }
 }

@@ -19,7 +19,12 @@ import com.couplebase.di.StubVendorRepository
 import com.couplebase.navigation.RootComponent
 import com.couplebase.navigation.RootContent
 
-fun MainViewController() = ComposeUIViewController {
+/**
+ * Creates the main view controller.
+ * @param deepLinkUri Optional deep link URI from iOS (e.g. universal link or custom scheme).
+ *                    Pass from AppDelegate/SceneDelegate when handling openURL.
+ */
+fun MainViewController(deepLinkUri: String? = null) = ComposeUIViewController {
     val lifecycle = LifecycleRegistry()
     val preferencesDataStore = PreferencesDataStoreImpl(PlatformStorage())
     val rootComponent = RootComponent(
@@ -36,6 +41,7 @@ fun MainViewController() = ComposeUIViewController {
         financeRepository = StubFinanceRepository(),
         communicationRepository = StubCommunicationRepository(),
         preferencesDataStore = preferencesDataStore,
+        deepLinkUri = deepLinkUri,
     )
     RootContent(rootComponent)
 }
