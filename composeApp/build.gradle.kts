@@ -63,6 +63,7 @@ kotlin {
             implementation(projects.core.ui)
             implementation(projects.feature.auth)
             implementation(projects.feature.weddingChecklist)
+            implementation(projects.feature.weddingBudget)
         }
 
         androidMain.dependencies {
