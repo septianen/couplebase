@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.arkivanov.decompose.defaultComponentContext
 import com.couplebase.di.StubAuthRepository
+import com.couplebase.di.StubCoupleRepository
 import com.couplebase.navigation.RootComponent
 import com.couplebase.navigation.RootContent
 
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
         val rootComponent = RootComponent(
             componentContext = defaultComponentContext(),
             authRepository = StubAuthRepository(),
+            coupleRepository = StubCoupleRepository(),
         )
 
         setContent {
