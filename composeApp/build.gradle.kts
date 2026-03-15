@@ -65,6 +65,7 @@ kotlin {
             implementation(projects.feature.weddingChecklist)
             implementation(projects.feature.weddingBudget)
             implementation(projects.feature.weddingGuests)
+            implementation(projects.feature.weddingVendors)
         }
 
         androidMain.dependencies {

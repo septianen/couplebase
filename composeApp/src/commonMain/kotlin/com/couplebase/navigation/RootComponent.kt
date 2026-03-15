@@ -13,6 +13,7 @@ import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
 import com.couplebase.core.domain.repository.CoupleRepository
 import com.couplebase.core.domain.repository.GuestRepository
+import com.couplebase.core.domain.repository.VendorRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,6 +28,7 @@ class RootComponent(
     private val checklistRepository: ChecklistRepository,
     private val budgetRepository: BudgetRepository,
     private val guestRepository: GuestRepository,
+    private val vendorRepository: VendorRepository,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -62,6 +64,7 @@ class RootComponent(
                     checklistRepository = checklistRepository,
                     budgetRepository = budgetRepository,
                     guestRepository = guestRepository,
+                    vendorRepository = vendorRepository,
                     onLogout = ::onLogout,
                 )
             )

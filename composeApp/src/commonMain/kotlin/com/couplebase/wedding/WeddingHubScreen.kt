@@ -59,6 +59,7 @@ fun WeddingHubScreen(component: WeddingTabComponent) {
                                 "checklist" -> component.onNavigateToChecklist()
                                 "budget" -> component.onNavigateToBudget()
                                 "guests" -> component.onNavigateToGuests()
+                                "vendors" -> component.onNavigateToVendors()
                             }
                         },
                     )
@@ -121,6 +122,6 @@ private val hubItems = listOf(
     HubItem("checklist", "\u2705", "Checklist", "Track your tasks"),
     HubItem("budget", "\uD83D\uDCB0", "Budget", "Manage spending"),
     HubItem("guests", "\uD83D\uDC65", "Guests", "Manage invites"),
-    HubItem("vendors", "\uD83C\uDFAA", "Vendors", "Coming soon", enabled = false),
+    HubItem("vendors", "\uD83C\uDFAA", "Vendors", "Manage vendors"),
     HubItem("timeline", "\uD83D\uDCC5", "Timeline", "Coming soon", enabled = false),
 )
