@@ -12,6 +12,7 @@ import com.couplebase.core.domain.repository.AuthRepository
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
 import com.couplebase.core.domain.repository.CoupleRepository
+import com.couplebase.core.domain.repository.FinanceRepository
 import com.couplebase.core.domain.repository.GuestRepository
 import com.couplebase.core.domain.repository.LifeGoalRepository
 import com.couplebase.core.domain.repository.MilestoneRepository
@@ -35,6 +36,7 @@ class RootComponent(
     private val timelineRepository: TimelineRepository,
     private val milestoneRepository: MilestoneRepository,
     private val lifeGoalRepository: LifeGoalRepository,
+    private val financeRepository: FinanceRepository,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -74,6 +76,7 @@ class RootComponent(
                     timelineRepository = timelineRepository,
                     milestoneRepository = milestoneRepository,
                     lifeGoalRepository = lifeGoalRepository,
+                    financeRepository = financeRepository,
                     onLogout = ::onLogout,
                 )
             )
