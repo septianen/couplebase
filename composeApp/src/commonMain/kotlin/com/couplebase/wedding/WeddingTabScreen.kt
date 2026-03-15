@@ -11,6 +11,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.couplebase.feature.wedding.budget.BudgetScreen
 import com.couplebase.feature.wedding.checklist.ChecklistScreen
 import com.couplebase.feature.wedding.guests.GuestListScreen
+import com.couplebase.feature.wedding.vendors.VendorListScreen
 
 @Composable
 fun WeddingTabScreen(component: WeddingTabComponent) {
@@ -25,6 +26,7 @@ fun WeddingTabScreen(component: WeddingTabComponent) {
             is WeddingTabComponent.Child.Checklist -> ChecklistScreen(instance.component)
             is WeddingTabComponent.Child.Budget -> BudgetScreen(instance.component)
             is WeddingTabComponent.Child.Guests -> GuestListScreen(instance.component)
+            is WeddingTabComponent.Child.Vendors -> VendorListScreen(instance.component)
         }
     }
 }

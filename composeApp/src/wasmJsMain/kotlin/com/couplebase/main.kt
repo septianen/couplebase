@@ -11,6 +11,7 @@ import com.couplebase.di.StubBudgetRepository
 import com.couplebase.di.StubChecklistRepository
 import com.couplebase.di.StubCoupleRepository
 import com.couplebase.di.StubGuestRepository
+import com.couplebase.di.StubVendorRepository
 import com.couplebase.navigation.RootComponent
 import com.couplebase.navigation.RootContent
 
@@ -25,6 +26,7 @@ fun main() {
         checklistRepository = StubChecklistRepository(),
         budgetRepository = StubBudgetRepository(),
         guestRepository = StubGuestRepository(),
+        vendorRepository = StubVendorRepository(),
     )
 
     CanvasBasedWindow(canvasElementId = "ComposeTarget", title = "Couplebase") {
