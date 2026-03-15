@@ -10,6 +10,7 @@ import com.couplebase.core.model.Mood
 import com.couplebase.core.common.Result
 import com.couplebase.core.common.generateUuid
 import com.couplebase.core.common.nowLocal
+import com.couplebase.core.common.toUserMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -45,6 +46,10 @@ class CheckinComponent(
     fun onSaveCheckin() {
         handler.saveCheckin()
     }
+
+    fun onDismissError() {
+        handler.clearError()
+    }
 }
 
 data class CheckinUiState(
@@ -55,6 +60,7 @@ data class CheckinUiState(
     val reflection: String = "",
     val isLoading: Boolean = true,
     val isSaved: Boolean = false,
+    val error: String? = null,
 )
 
 private class CheckinHandler(
@@ -132,9 +138,13 @@ private class CheckinHandler(
                     _state.update { it.copy(todayCheckin = r.data, isSaved = true) }
                     loadCheckins()
                 }
-                is Result.Error -> {}
+                is Result.Error -> _state.update { it.copy(error = r.toUserMessage()) }
             }
         }
+    }
+
+    fun clearError() {
+        _state.update { it.copy(error = null) }
     }
 
     override fun onDestroy() {

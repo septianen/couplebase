@@ -13,6 +13,7 @@ CREATE TABLE vendor_payment (
 
 CREATE INDEX idx_vendor_payment_vendor ON vendor_payment(vendor_id);
 CREATE INDEX idx_vendor_payment_couple ON vendor_payment(couple_id);
+CREATE INDEX idx_vendor_payment_sync ON vendor_payment(sync_status);
 
 getByVendorId:
 SELECT * FROM vendor_payment WHERE vendor_id = ? AND is_deleted = 0 ORDER BY due_date;

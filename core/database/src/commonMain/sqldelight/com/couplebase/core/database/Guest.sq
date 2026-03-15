@@ -15,6 +15,7 @@ CREATE TABLE guest (
 );
 
 CREATE INDEX idx_guest_couple ON guest(couple_id);
+CREATE INDEX idx_guest_sync ON guest(sync_status);
 
 getByCoupleId:
 SELECT * FROM guest WHERE couple_id = ? AND is_deleted = 0 ORDER BY name;

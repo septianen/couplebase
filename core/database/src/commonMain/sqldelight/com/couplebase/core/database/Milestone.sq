@@ -12,6 +12,7 @@ CREATE TABLE milestone (
 );
 
 CREATE INDEX idx_milestone_couple ON milestone(couple_id);
+CREATE INDEX idx_milestone_sync ON milestone(sync_status);
 
 getByCoupleId:
 SELECT * FROM milestone WHERE couple_id = ? AND is_deleted = 0 ORDER BY date;

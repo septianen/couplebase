@@ -14,6 +14,7 @@ CREATE TABLE timeline_block (
 );
 
 CREATE INDEX idx_timeline_couple ON timeline_block(couple_id);
+CREATE INDEX idx_timeline_sync ON timeline_block(sync_status);
 
 getByCoupleId:
 SELECT * FROM timeline_block WHERE couple_id = ? AND is_deleted = 0 ORDER BY start_time;

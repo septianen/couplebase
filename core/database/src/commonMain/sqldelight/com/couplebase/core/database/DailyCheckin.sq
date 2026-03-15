@@ -10,6 +10,7 @@ CREATE TABLE daily_checkin (
 );
 
 CREATE INDEX idx_daily_checkin_couple ON daily_checkin(couple_id);
+CREATE INDEX idx_daily_checkin_sync ON daily_checkin(sync_status);
 CREATE UNIQUE INDEX idx_daily_checkin_unique ON daily_checkin(couple_id, user_id, date);
 
 getByUserAndDate:
