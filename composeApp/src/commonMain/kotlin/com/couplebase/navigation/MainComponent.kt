@@ -9,9 +9,12 @@ import com.arkivanov.decompose.value.Value
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
 import com.couplebase.core.domain.repository.GuestRepository
+import com.couplebase.core.domain.repository.LifeGoalRepository
+import com.couplebase.core.domain.repository.MilestoneRepository
 import com.couplebase.core.domain.repository.TimelineRepository
 import com.couplebase.core.domain.repository.VendorRepository
 import com.couplebase.home.HomeTabComponent
+import com.couplebase.me.MeTabComponent
 import com.couplebase.wedding.WeddingTabComponent
 import kotlinx.serialization.Serializable
 
@@ -22,6 +25,8 @@ class MainComponent(
     private val guestRepository: GuestRepository,
     private val vendorRepository: VendorRepository,
     private val timelineRepository: TimelineRepository,
+    private val milestoneRepository: MilestoneRepository,
+    private val lifeGoalRepository: LifeGoalRepository,
     private val coupleId: String = "stub-couple-id",
     val onLogout: () -> Unit,
 ) : ComponentContext by componentContext {
@@ -52,7 +57,14 @@ class MainComponent(
             )
             Tab.Finance -> TabChild.Finance(componentContext)
             Tab.Us -> TabChild.Us(componentContext)
-            Tab.Me -> TabChild.Me(componentContext)
+            Tab.Me -> TabChild.Me(
+                MeTabComponent(
+                    componentContext = componentContext,
+                    coupleId = coupleId,
+                    milestoneRepository = milestoneRepository,
+                    lifeGoalRepository = lifeGoalRepository,
+                )
+            )
         }
     }
 
@@ -83,6 +95,6 @@ class MainComponent(
         data class Wedding(val component: WeddingTabComponent) : TabChild
         data class Finance(val componentContext: ComponentContext) : TabChild
         data class Us(val componentContext: ComponentContext) : TabChild
-        data class Me(val componentContext: ComponentContext) : TabChild
+        data class Me(val component: MeTabComponent) : TabChild
     }
 }

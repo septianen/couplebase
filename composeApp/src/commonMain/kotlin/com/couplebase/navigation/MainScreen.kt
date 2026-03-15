@@ -19,6 +19,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.couplebase.home.HomeTabScreen
+import com.couplebase.me.MeTabScreen
 import com.couplebase.wedding.WeddingTabScreen
 
 @Composable
@@ -55,7 +56,7 @@ fun MainScreen(component: MainComponent) {
                 is MainComponent.TabChild.Wedding -> WeddingTabScreen(instance.component)
                 is MainComponent.TabChild.Finance -> TabPlaceholder("Finance")
                 is MainComponent.TabChild.Us -> TabPlaceholder("Us")
-                is MainComponent.TabChild.Me -> TabPlaceholder("Me")
+                is MainComponent.TabChild.Me -> MeTabScreen(instance.component)
             }
         }
     }
