@@ -11,6 +11,7 @@ import com.couplebase.di.StubBudgetRepository
 import com.couplebase.di.StubChecklistRepository
 import com.couplebase.di.StubCoupleRepository
 import com.couplebase.di.StubGuestRepository
+import com.couplebase.di.StubCommunicationRepository
 import com.couplebase.di.StubFinanceRepository
 import com.couplebase.di.StubLifeGoalRepository
 import com.couplebase.di.StubMilestoneRepository
@@ -35,6 +36,7 @@ fun main() {
         milestoneRepository = StubMilestoneRepository(),
         lifeGoalRepository = StubLifeGoalRepository(),
         financeRepository = StubFinanceRepository(),
+        communicationRepository = StubCommunicationRepository(),
     )
 
     CanvasBasedWindow(canvasElementId = "ComposeTarget", title = "Couplebase") {

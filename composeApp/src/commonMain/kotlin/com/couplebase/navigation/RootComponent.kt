@@ -11,6 +11,7 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.couplebase.core.domain.repository.AuthRepository
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
+import com.couplebase.core.domain.repository.CommunicationRepository
 import com.couplebase.core.domain.repository.CoupleRepository
 import com.couplebase.core.domain.repository.FinanceRepository
 import com.couplebase.core.domain.repository.GuestRepository
@@ -37,6 +38,7 @@ class RootComponent(
     private val milestoneRepository: MilestoneRepository,
     private val lifeGoalRepository: LifeGoalRepository,
     private val financeRepository: FinanceRepository,
+    private val communicationRepository: CommunicationRepository,
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -77,6 +79,7 @@ class RootComponent(
                     milestoneRepository = milestoneRepository,
                     lifeGoalRepository = lifeGoalRepository,
                     financeRepository = financeRepository,
+                    communicationRepository = communicationRepository,
                     onLogout = ::onLogout,
                 )
             )
