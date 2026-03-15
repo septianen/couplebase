@@ -72,6 +72,7 @@ kotlin {
             implementation(projects.feature.financeBudget)
             implementation(projects.feature.financeExpenses)
             implementation(projects.feature.financeSavings)
+            implementation(projects.feature.settings)
         }
 
         androidMain.dependencies {

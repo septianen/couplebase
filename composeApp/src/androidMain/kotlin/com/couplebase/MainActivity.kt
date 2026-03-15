@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
             milestoneRepository = StubMilestoneRepository(),
             lifeGoalRepository = StubLifeGoalRepository(),
             financeRepository = StubFinanceRepository(),
+            preferencesDataStore = preferencesDataStore,
         )
 
         setContent {
