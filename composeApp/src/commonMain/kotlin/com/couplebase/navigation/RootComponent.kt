@@ -12,6 +12,7 @@ import com.couplebase.core.datastore.PreferencesDataStore
 import com.couplebase.core.domain.repository.AuthRepository
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
+import com.couplebase.core.domain.repository.CommunicationRepository
 import com.couplebase.core.domain.repository.CoupleRepository
 import com.couplebase.core.domain.repository.FinanceRepository
 import com.couplebase.core.domain.repository.GuestRepository
@@ -38,6 +39,7 @@ class RootComponent(
     private val milestoneRepository: MilestoneRepository,
     private val lifeGoalRepository: LifeGoalRepository,
     private val financeRepository: FinanceRepository,
+    private val communicationRepository: CommunicationRepository,
     private val preferencesDataStore: PreferencesDataStore,
 ) : ComponentContext by componentContext {
 
@@ -79,6 +81,7 @@ class RootComponent(
                     milestoneRepository = milestoneRepository,
                     lifeGoalRepository = lifeGoalRepository,
                     financeRepository = financeRepository,
+                    communicationRepository = communicationRepository,
                     preferencesDataStore = preferencesDataStore,
                     authRepository = authRepository,
                     coupleRepository = coupleRepository,

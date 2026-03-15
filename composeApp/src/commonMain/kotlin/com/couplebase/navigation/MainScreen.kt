@@ -21,6 +21,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.couplebase.finance.FinanceTabScreen
 import com.couplebase.home.HomeTabScreen
 import com.couplebase.me.MeTabScreen
+import com.couplebase.us.UsTabScreen
 import com.couplebase.wedding.WeddingTabScreen
 
 @Composable
@@ -56,7 +57,7 @@ fun MainScreen(component: MainComponent) {
                 is MainComponent.TabChild.Home -> HomeTabScreen(instance.component)
                 is MainComponent.TabChild.Wedding -> WeddingTabScreen(instance.component)
                 is MainComponent.TabChild.Finance -> FinanceTabScreen(instance.component)
-                is MainComponent.TabChild.Us -> TabPlaceholder("Us")
+                is MainComponent.TabChild.Us -> UsTabScreen(instance.component)
                 is MainComponent.TabChild.Me -> MeTabScreen(instance.component)
             }
         }

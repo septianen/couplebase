@@ -72,6 +72,9 @@ kotlin {
             implementation(projects.feature.financeBudget)
             implementation(projects.feature.financeExpenses)
             implementation(projects.feature.financeSavings)
+            implementation(projects.feature.commCheckin)
+            implementation(projects.feature.commNotes)
+            implementation(projects.feature.commJournal)
             implementation(projects.feature.settings)
         }
 

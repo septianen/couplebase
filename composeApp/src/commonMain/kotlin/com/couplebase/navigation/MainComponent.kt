@@ -10,6 +10,7 @@ import com.couplebase.core.datastore.PreferencesDataStore
 import com.couplebase.core.domain.repository.AuthRepository
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.ChecklistRepository
+import com.couplebase.core.domain.repository.CommunicationRepository
 import com.couplebase.core.domain.repository.CoupleRepository
 import com.couplebase.core.domain.repository.FinanceRepository
 import com.couplebase.core.domain.repository.GuestRepository
@@ -20,6 +21,7 @@ import com.couplebase.core.domain.repository.VendorRepository
 import com.couplebase.finance.FinanceTabComponent
 import com.couplebase.home.HomeTabComponent
 import com.couplebase.me.MeTabComponent
+import com.couplebase.us.UsTabComponent
 import com.couplebase.wedding.WeddingTabComponent
 import kotlinx.serialization.Serializable
 
@@ -33,6 +35,7 @@ class MainComponent(
     private val milestoneRepository: MilestoneRepository,
     private val lifeGoalRepository: LifeGoalRepository,
     private val financeRepository: FinanceRepository,
+    private val communicationRepository: CommunicationRepository,
     private val preferencesDataStore: PreferencesDataStore,
     private val authRepository: AuthRepository,
     private val coupleRepository: CoupleRepository,
@@ -72,7 +75,13 @@ class MainComponent(
                     budgetRepository = budgetRepository,
                 )
             )
-            Tab.Us -> TabChild.Us(componentContext)
+            Tab.Us -> TabChild.Us(
+                UsTabComponent(
+                    componentContext = componentContext,
+                    coupleId = coupleId,
+                    communicationRepository = communicationRepository,
+                )
+            )
             Tab.Me -> TabChild.Me(
                 MeTabComponent(
                     componentContext = componentContext,
@@ -114,7 +123,7 @@ class MainComponent(
         data class Home(val component: HomeTabComponent) : TabChild
         data class Wedding(val component: WeddingTabComponent) : TabChild
         data class Finance(val component: FinanceTabComponent) : TabChild
-        data class Us(val componentContext: ComponentContext) : TabChild
+        data class Us(val component: UsTabComponent) : TabChild
         data class Me(val component: MeTabComponent) : TabChild
     }
 }
