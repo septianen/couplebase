@@ -1,5 +1,13 @@
 package com.couplebase
 
 import androidx.compose.ui.window.ComposeUIViewController
+import com.arkivanov.decompose.DefaultComponentContext
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.couplebase.navigation.RootComponent
+import com.couplebase.navigation.RootContent
 
-fun MainViewController() = ComposeUIViewController { App() }
+fun MainViewController() = ComposeUIViewController {
+    val lifecycle = LifecycleRegistry()
+    val rootComponent = RootComponent(DefaultComponentContext(lifecycle = lifecycle))
+    RootContent(rootComponent)
+}

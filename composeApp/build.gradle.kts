@@ -50,6 +50,13 @@ kotlin {
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+
+            implementation(libs.essenty.lifecycle)
+            implementation(libs.essenty.statekeeper)
+            implementation(libs.essenty.instancekeeper)
+            implementation(libs.essenty.backhandler)
+
+            implementation(projects.core.ui)
         }
 
         androidMain.dependencies {
