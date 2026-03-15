@@ -6,6 +6,7 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.couplebase.core.datastore.PlatformStorage
 import com.couplebase.core.datastore.PreferencesDataStoreImpl
 import com.couplebase.di.StubAuthRepository
+import com.couplebase.di.StubBudgetRepository
 import com.couplebase.di.StubChecklistRepository
 import com.couplebase.di.StubCoupleRepository
 import com.couplebase.navigation.RootComponent
@@ -19,6 +20,7 @@ fun MainViewController() = ComposeUIViewController {
         authRepository = StubAuthRepository(preferencesDataStore),
         coupleRepository = StubCoupleRepository(),
         checklistRepository = StubChecklistRepository(),
+        budgetRepository = StubBudgetRepository(),
     )
     RootContent(rootComponent)
 }

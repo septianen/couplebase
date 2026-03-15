@@ -8,6 +8,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.couplebase.feature.wedding.budget.BudgetScreen
 import com.couplebase.feature.wedding.checklist.ChecklistScreen
 
 @Composable
@@ -19,7 +20,9 @@ fun WeddingTabScreen(component: WeddingTabComponent) {
         animation = stackAnimation(slide() + fade()),
     ) { child ->
         when (val instance = child.instance) {
+            is WeddingTabComponent.Child.Hub -> WeddingHubScreen(component)
             is WeddingTabComponent.Child.Checklist -> ChecklistScreen(instance.component)
+            is WeddingTabComponent.Child.Budget -> BudgetScreen(instance.component)
         }
     }
 }
