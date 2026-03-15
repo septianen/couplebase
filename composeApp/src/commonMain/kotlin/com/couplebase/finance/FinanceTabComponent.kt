@@ -10,6 +10,8 @@ import com.arkivanov.decompose.value.Value
 import com.couplebase.core.domain.repository.BudgetRepository
 import com.couplebase.core.domain.repository.FinanceRepository
 import com.couplebase.feature.finance.budget.MonthlyBudgetComponent
+import com.couplebase.feature.finance.expenses.ExpensesComponent
+import com.couplebase.feature.finance.savings.SavingsComponent
 import kotlinx.serialization.Serializable
 
 class FinanceTabComponent(
@@ -41,8 +43,22 @@ class FinanceTabComponent(
                     onBack = { navigation.pop() },
                 )
             )
-            Config.Expenses -> Child.Expenses
-            Config.Savings -> Child.Savings
+            Config.Expenses -> Child.Expenses(
+                ExpensesComponent(
+                    componentContext = componentContext,
+                    coupleId = coupleId,
+                    budgetRepository = budgetRepository,
+                    onBack = { navigation.pop() },
+                )
+            )
+            Config.Savings -> Child.Savings(
+                SavingsComponent(
+                    componentContext = componentContext,
+                    coupleId = coupleId,
+                    financeRepository = financeRepository,
+                    onBack = { navigation.pop() },
+                )
+            )
         }
     }
 
@@ -76,7 +92,7 @@ class FinanceTabComponent(
     sealed interface Child {
         data object Hub : Child
         data class Budget(val component: MonthlyBudgetComponent) : Child
-        data object Expenses : Child
-        data object Savings : Child
+        data class Expenses(val component: ExpensesComponent) : Child
+        data class Savings(val component: SavingsComponent) : Child
     }
 }
